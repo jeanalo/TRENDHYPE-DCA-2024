@@ -19,6 +19,7 @@ class Login extends HTMLElement {
 
     connectedCallback() {
         this.render();
+        const registerCardComponent = new registerCard();
     }
 
     changeEmail(e: any) {
@@ -39,11 +40,11 @@ class Login extends HTMLElement {
             this.shadowRoot.innerHTML = ''; // Clear existing content
 
             // Crear e instanciar el componente imgBanner
-            const bannerComponent = new imgBanner();
-            bannerComponent.setAttribute(ImgBannerAttribute.img, 'path/to/image.jpg');
-            bannerComponent.setAttribute(ImgBannerAttribute.trendtext, 'Welcome to TrendHype');
-            bannerComponent.setAttribute(ImgBannerAttribute.opacitylayer, '0.5');
-            this.shadowRoot.appendChild(bannerComponent);
+            const title = new imgBanner();
+            title.setAttribute(ImgBannerAttribute.img, 'path/to/image.jpg');
+            title.setAttribute(ImgBannerAttribute.trendtext, 'Welcome to TrendHype');
+            title.setAttribute(ImgBannerAttribute.opacitylayer, '0.5');
+            this.shadowRoot.appendChild(title);
 
             // Crear e instanciar el componente loginForm
             const loginFormComponent = new loginForm();

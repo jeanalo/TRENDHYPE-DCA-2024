@@ -19,24 +19,26 @@ class AppContainer extends HTMLElement {
     }
 
     render() {
+        console.log(appState);
+        console.log('hello');
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = '';
 
             switch (appState.screen) {
-                // case Screens.REGISTER:
-                //     const register = document.createElement('app-register');
-                //     this.shadowRoot.appendChild(register);
-                //     break;
+                case Screens.REGISTER:
+                    const register = document.createElement('app-register');
+                    this.shadowRoot.appendChild(register);
+                    break;
 
                 case Screens.LOGIN:
                     const login = document.createElement('app-login');
                     this.shadowRoot.appendChild(login);
                     break;
 
-                // case Screens.DASHBOARD:
-                //     const dashboard = document.createElement('app-dashboard');
-                //     this.shadowRoot.appendChild(dashboard);
-                //     break;
+                case Screens.DASHBOARD:
+                    const dashboard = document.createElement('app-dashboard');
+                    this.shadowRoot.appendChild(dashboard);
+                    break;
 
                 default:
                     break;
