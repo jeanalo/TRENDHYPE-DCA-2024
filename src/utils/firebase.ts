@@ -66,8 +66,8 @@ export const registerUser = async (credentials: any) => {
 
 		const where = doc(db, 'users', userCredential.user.uid);
 		const data = {
-			userName: credentials.userName,
-			name: credentials.name,
+			firstname: credentials.firstname,
+			lastname: credentials.lastname,
 		};
 
 		await setDoc(where, data);

@@ -3,8 +3,9 @@ import Storage from '../utils/storage';
 import { AppState, Observer } from '../types/store';
 
 const initialState: AppState = {
-	screen: 'LOGIN',
+	screen: 'REGISTER',
 	publications: [],
+	//user: {},
 };
 
 export let appState = Storage.get('STORE', initialState);
