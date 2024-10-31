@@ -1,0 +1,57 @@
+/* Fondo general */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Calibri, Arial, sans-serif;
+    color: white;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Fondo difuminado */
+#background {
+    position: absolute;
+    background-color: #4be2bf;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('https://github.com/jeanalo/IMG-assets/blob/main/image%2057.png?raw=true');
+    background-size: cover; 
+    filter: blur(10px);
+    -webkit-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    transform: scale(1.03);
+    z-index: -1;
+}
+
+/* Wrapper principal */
+#loginWrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Contenedor general de los componentes */
+#login {
+    width: 100%;
+    max-width: 700px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: center;
+}
+
+/* Estilo del título principal */
+#login h1 {
+    grid-column: span 2;
+    font-family: "Times New Roman", serif;
+    font-size: 4rem;
+    font-style: italic;
+    color: #4be2bf;
+    text-align: center;
+}
