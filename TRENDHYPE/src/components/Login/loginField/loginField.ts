@@ -21,7 +21,7 @@ class loginForm extends HTMLElement {
     emailinput?: string;
     passwordinput?: string;
     loginbutton?: string;
-
+    
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -93,7 +93,7 @@ class loginForm extends HTMLElement {
                 form p {
                     font-size: 2rem;
                     margin: 0;
-                    color: #333;
+                    color: #332;
                 }
 
                 form label {
