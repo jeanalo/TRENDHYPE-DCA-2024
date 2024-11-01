@@ -1,8 +1,9 @@
-import { dispatch } from '../../store';
-import { navigate } from '../../store/actions';
-import { Screens } from '../../types/store';
-import { registerUser } from '../../utils/firebase';
+
 import styles from './registerForm.css';
+import { dispatch } from '../../../store/index';
+import { navigate } from '../../../store/actions';
+import { Screens } from '../../../types/store';
+import { registerUser } from '../../../utils/firebase';
 
 
 const credentials = {
