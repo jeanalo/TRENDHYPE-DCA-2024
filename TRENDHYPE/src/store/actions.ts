@@ -15,3 +15,10 @@ export const getProductsAction = async () => {
 		payload: products,
 	};
 };
+
+export const setUserCredentials = (user: string) => {
+	return {
+		action: Actions.SETUSERCREDENTIALS,
+		payload: user,
+	};
+};
