@@ -1,5 +1,4 @@
 
-import styles from './registerForm.css';
 import { dispatch } from '../../../store/index';
 import { navigate } from '../../../store/actions';
 import { Screens } from '../../../types/store';
@@ -45,9 +44,19 @@ class Register extends HTMLElement {
 
     async submitForm(e: Event) {
         e.preventDefault();
+        
+        // Llama a `registerUser` con `credentials`
         const resp = await registerUser(credentials);
-        resp ? dispatch(navigate(Screens.DASHBOARD)) : alert('No se pudo crear el usuario');
+        
+        if (resp) {
+            alert("Usuario creado exitosamente. Redirigiendo al login...");
+            dispatch(navigate(Screens.LOGIN));
+        } else {
+            alert('No se pudo crear el usuario. Por favor, intente nuevamente.');
+        }
     }
+    
+
 
     render() {
         if (this.shadowRoot) {

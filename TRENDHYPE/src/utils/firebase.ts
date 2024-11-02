@@ -66,8 +66,8 @@ export const registerUser = async (credentials: any) => {
 
 		const where = doc(db, 'users', userCredential.user.uid);
 		const data = {
-			userName: credentials.userName,
-			name: credentials.name,
+			firstname: credentials.firstname,
+			lastname: credentials.lastname,
 		};
 
 		await setDoc(where, data);
@@ -80,14 +80,27 @@ export const registerUser = async (credentials: any) => {
 
 export const loginUser = async (email: string, password: string) => {
 	try {
-		const { auth } = await getFirebaseInstance();
-		const { signInWithEmailAndPassword } = await import('firebase/auth');
-
-		const userCredential = await signInWithEmailAndPassword(auth, email, password);
-		console.log(userCredential.user);
-		return true;
+	  const { auth } = await getFirebaseInstance();
+	  const { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } = await import('firebase/auth');
+  
+	  await setPersistence(auth, browserLocalPersistence);
+	  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+	  console.log('Login successful:', userCredential.user);
+	  return true;
 	} catch (error) {
-		console.error(error);
-		return false;
+	  console.error('Error logging in:', error);
+	  return false;
+	}
+  };
+  
+  export const logOut = async () => {
+	const { auth } = await getFirebaseInstance();
+	const { signOut } = await import('firebase/auth');
+  
+	try {
+	  await signOut(auth); // Cierra la sesión del usuario
+	  console.log("Usuario deslogueado exitosamente");
+	} catch (error) {
+	  console.error("Error al cerrar sesión:", error);
 	}
 };

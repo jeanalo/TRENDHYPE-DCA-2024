@@ -2,11 +2,9 @@
 import { addObserver, appState } from './store/index';
 import { Screens } from './types/store';
 import './screens/login/login'
+import './screens/register/register';
+import './screens/dashboard/dashboard';
 
-
-
-// import './screens/REGISTER/REGISTER';
-// import './screens/LOGIN/LOGIN';
 // import './screens/DASHBOARD/DASHBOARD';
 
 class AppContainer extends HTMLElement {

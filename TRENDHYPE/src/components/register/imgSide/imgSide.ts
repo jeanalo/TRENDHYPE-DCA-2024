@@ -45,6 +45,6 @@ export enum ImgSideAttribute {
   }
   }  
   
-  customElements.define('img-banner-component', imgSideBanner
+  customElements.define('img-banner-component2', imgSideBanner
   );
   export default imgSideBanner;

@@ -1,6 +1,6 @@
 import imgSideBanner, { ImgSideAttribute } from '../../components/register/imgSide/imgSide';
-import '../../../TRENDHYPE/src/components/register/registerForm'; 
 import styles from './register.css';
+import  '../../components/register/registerForm/registerForm';
 
 class RegisterScreen extends HTMLElement {
     constructor() {
