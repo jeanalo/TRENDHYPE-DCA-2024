@@ -2,6 +2,7 @@
 import { addObserver, appState } from './store/index';
 import { Screens } from './types/store';
 import './screens/login/login'
+import './screens/QuestionOfTheDay/QuestionOfTheDay'
 
 
 
@@ -40,6 +41,11 @@ class AppContainer extends HTMLElement {
                 case Screens.DASHBOARD:
                     const dashboard = document.createElement('app-dashboard');
                     this.shadowRoot.appendChild(dashboard);
+                    break;
+
+                case Screens.QUESTIONOFTHEDAY:
+                    const questionoftheday = document.createElement('app-survey');
+                    this.shadowRoot.appendChild(questionoftheday);
                     break;
 
                 default:
