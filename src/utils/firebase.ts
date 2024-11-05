@@ -90,4 +90,19 @@ export const loginUser = async (email: string, password: string) => {
 		console.error(error);
 		return false;
 	}
+
+	
+};
+
+export const updateUserData = async (uid: string, userData: Record<string, any>) => {
+    try {
+        const { db } = await getFirebaseInstance();
+        const { doc, updateDoc } = await import('firebase/firestore');
+
+        const userDoc = doc(db, 'users', uid);
+        await updateDoc(userDoc, userData);
+        console.log('User data updated successfully');
+    } catch (error) {
+        console.error('Error updating user data:', error);
+    }
 };

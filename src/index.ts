@@ -1,7 +1,9 @@
+// src/index.ts
 import { addObserver, appState } from './store/index';
 import { Screens } from './types/store';
 import './screens/login/login';
 import './screens/register/register';
+import './screens/userSetting/userSetting'; // Importa el screen de configuración del usuario
 
 class AppContainer extends HTMLElement {
     constructor() {
@@ -38,12 +40,18 @@ class AppContainer extends HTMLElement {
                     this.shadowRoot.appendChild(dashboard);
                     break;
 
+                case Screens.SETTINGS:  // Agrega el caso para SETTINGS
+                    console.log("Rendering user-settings-screen");
+                    const settings = document.createElement('user-settings-screen');
+                    this.shadowRoot.appendChild(settings);
+                    break;
+
                 default:
                     console.log("No valid screen selected");
                     break;
             }
         }
-    console.log('Pantalla actual', appState.screen);
+        console.log('Pantalla actual', appState.screen);
     }
 }
 

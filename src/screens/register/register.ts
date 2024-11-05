@@ -1,5 +1,5 @@
-import imgBanner, { ImgSideAttribute } from '../../components/imgSide/imgSide';
-import '../../components/register/registerForm'; 
+import imgBanner, { ImgSideAttribute } from '../../components/register/imgSide/imgSide';
+import '../../components/register/registerForm/registerForm'; 
 import styles from './register.css';
 
 class RegisterScreen extends HTMLElement {

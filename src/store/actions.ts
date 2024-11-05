@@ -15,3 +15,10 @@ export const getProductsAction = async () => {
 		payload: products,
 	};
 };
+
+export const setUser = (user: any) => {
+    return {
+        action: Actions.SET_USER,
+        payload: user,
+    };
+};
