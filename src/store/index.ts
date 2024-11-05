@@ -1,4 +1,3 @@
-// src/store/index.ts
 import { reducer } from './reducer';
 import Storage from '../utils/storage';
 import { AppState, Observer, Screens } from '../types/store';

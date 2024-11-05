@@ -8,17 +8,17 @@ export const navigate = (screen: Screens) => {
 	};
 };
 
-export const getProductsAction = async () => {
-	const products = await getPosts();
-	return {
-		action: Actions.GETPOSTS,
-		payload: products,
-	};
+export const fetchPostsAction = async () => {
+    const posts = await getPosts();
+    return {
+        action: Actions.GETPOSTS,
+        payload: posts,
+    };
 };
 
 export const setUser = (user: any) => {
     return {
-        action: Actions.SET_USER,
+        action: Actions.SETUSER,
         payload: user,
     };
 };

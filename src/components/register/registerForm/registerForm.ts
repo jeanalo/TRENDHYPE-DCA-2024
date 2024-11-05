@@ -1,9 +1,7 @@
 import { dispatch } from '../../../store';
-import { navigate } from '../../../store/actions';
-import { Screens } from '../../../types/store';
-import { registerUser } from '../../../utils/firebase';
-import styles from './registerForm.css';
-
+import { navigate, setUser } from '../../../store/actions';
+import { Actions, Screens } from '../../../types/store';
+import { registerUser, getUserData } from '../../../utils/firebase';
 
 const credentials = {
     email: '',
@@ -44,43 +42,46 @@ class Register extends HTMLElement {
 
     async submitForm(e: Event) {
         e.preventDefault();
-        const resp = await registerUser(credentials);
-        resp ? dispatch(navigate(Screens.SETTINGS)) : alert('Logueo exitoso');
+        const uid = await registerUser(credentials);
+        
+        if (uid) {
+            const userData = await getUserData(uid);
+
+            if (userData) {
+                dispatch({
+                    action: Actions.SETUSER,
+                    payload: userData
+                });
+                
+                dispatch(navigate(Screens.USERSETTINGS));
+            }
+        } else {
+            alert('Error al registrar el usuario');
+        }
     }
 
     render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
-             <link rel="stylesheet" href="../src/components/register/registerForm.ts">
-
                 <form>
                     <p>Sign up</p>
-
                     <label for="firstname">First Name</label>
                     <input id="firstname" type="text" placeholder="First name">
-
                     <label for="lastname">Last Name</label>
                     <input id="lastname" type="text" placeholder="Last name">
-
                     <label for="email">E-mail address</label>
                     <input id="email" type="email" placeholder="E-mail address">
-
                     <label for="password">Password</label>
                     <input id="password" type="password" placeholder="Password">
-
                     <button type="submit">Register</button>
                 </form>
             `;
 
-            // Añadir listeners a cada campo de entrada
             this.shadowRoot.querySelector('#firstname')?.addEventListener('input', this.changeFirstName.bind(this));
             this.shadowRoot.querySelector('#lastname')?.addEventListener('input', this.changeLastName.bind(this));
             this.shadowRoot.querySelector('#email')?.addEventListener('input', this.changeEmail.bind(this));
             this.shadowRoot.querySelector('#password')?.addEventListener('input', this.changePassword.bind(this));
-
-            // Listener para el botón de envío
-            const form = this.shadowRoot.querySelector('form');
-            form?.addEventListener('submit', this.submitForm.bind(this));
+            this.shadowRoot.querySelector('form')?.addEventListener('submit', this.submitForm.bind(this));
         }
     }
 }

@@ -15,7 +15,6 @@ class RegisterScreen extends HTMLElement {
     render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
-                <link rel="stylesheet" href="../screens/register/register.css">
                 <div id="background"></div>
                 <div id="loginWrapper">
                 <div id="banner-container">

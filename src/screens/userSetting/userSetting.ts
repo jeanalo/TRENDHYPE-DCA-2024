@@ -1,3 +1,4 @@
+import { appState } from '../../store/index';
 import UserSideCard, { UserSideCardAttribute } from '../../components/userSettings/userSideCard/userSideCard';
 import UserSettingsForm, { userSettingsFormAttribute } from '../../components/userSettings/userSettingsForm/userSettingsForm';
 
@@ -30,80 +31,15 @@ class UserSettingsScreen extends HTMLElement {
                     #sideCardContainer {
                         flex: 1;
                         max-width: 300px;
-                        
                         display: flex;
                         justify-content: center;
                         background-color: #3d3a0b;
-
                         border-radius: 10px;
                     }
 
                     #formContainer {
                         flex: 3;
                         border-radius: 10px;
-                    }
-
-                    /* Estilos específicos de UserSideCard */
-                    .profile-image {
-                        width: 100px;
-                        height: 100px;
-                        border-radius: 50%;
-                        background-size: cover;
-                        background-position: center;
-                        margin-bottom: 10px;
-                    }
-
-                    .name, .username, .description {
-                        text-align: center;
-                        margin: 5px 0;
-                    }
-
-                    /* Estilos del formulario en UserSettingsForm */
-                    form {
-                        color: #ffffff;
-                    }
-
-                    form > p {
-                        font-size: 2rem;
-                        margin: 40px 0 0 0;
-                    }
-
-                    form label {
-                        display: block;
-                        margin: 16px 0 4px 32px;
-                        font-size: 2rem;
-                    }
-
-                    form input {
-                        width: calc(100% - 64px);
-                        border-radius: 32px;
-                        border: none;
-                        padding: 16px;
-                        background-color: rgba(200, 200, 200, 0.4);
-                        font-size: 1.5rem;
-                        color: #fff;
-                    }
-
-                    form input::placeholder {
-                        color: #ffffff;
-                        opacity: 0.7;
-                    }
-
-                    #buttonWrapper {
-                        text-align: center;
-                        margin-top: 20px;
-                    }
-
-                    form > div > button {
-                        width: 250px;
-                        background-color: #E2D34B;
-                        color: #990000;
-                        border: none;
-                        padding: 16px;
-                        font-weight: bold;
-                        border-radius: 32px;
-                        cursor: pointer;
-                        font-size: 1.5rem;
                     }
                 </style>
 
@@ -113,27 +49,27 @@ class UserSettingsScreen extends HTMLElement {
                 </div>
             `;
 
-            // Crear y configurar el componente `userSideCard`
+            const user = appState.user;
+
+            // Crear y configurar `UserSideCard`
             const userSideCardComponent = new UserSideCard();
-            userSideCardComponent.setAttribute(UserSideCardAttribute.name, 'Jean Alomia');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.username, '@Jeanalomia');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.description, 'Chasing dreams and making memories');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.profileImage, 'path_to_profile_image.jpg');
+            userSideCardComponent.setAttribute(UserSideCardAttribute.name, user?.firstName || '');
+            userSideCardComponent.setAttribute(UserSideCardAttribute.username, user?.username || '');
+            userSideCardComponent.setAttribute(UserSideCardAttribute.description, user?.description || '');
+            userSideCardComponent.setAttribute(UserSideCardAttribute.profileImage, user?.profileImage || 'path_to_default_image.jpg');
             
-            // Agregar `userSideCard` al contenedor `#sideCardContainer`
             this.shadowRoot.querySelector('#sideCardContainer')?.appendChild(userSideCardComponent);
 
-            // Crear y configurar el componente `userSettingsForm`
+            // Crear y configurar `UserSettingsForm`
             const userSettingComponent = new UserSettingsForm();
-            userSettingComponent.setAttribute(userSettingsFormAttribute.firstName, 'First Name');
-            userSettingComponent.setAttribute(userSettingsFormAttribute.lastName, 'Last Name');
-            userSettingComponent.setAttribute(userSettingsFormAttribute.email, 'Email');
-            userSettingComponent.setAttribute(userSettingsFormAttribute.country, 'Country');
-            userSettingComponent.setAttribute(userSettingsFormAttribute.city, 'City');
-            userSettingComponent.setAttribute(userSettingsFormAttribute.username, 'Username');
-            userSettingComponent.setAttribute(userSettingsFormAttribute.description, 'Description');
+            userSettingComponent.setAttribute(userSettingsFormAttribute.firstName, user?.firstName || '');
+            userSettingComponent.setAttribute(userSettingsFormAttribute.lastName, user?.lastName || '');
+            userSettingComponent.setAttribute(userSettingsFormAttribute.email, user?.email || '');
+            userSettingComponent.setAttribute(userSettingsFormAttribute.country, user?.country || '');
+            userSettingComponent.setAttribute(userSettingsFormAttribute.city, user?.city || '');
+            userSettingComponent.setAttribute(userSettingsFormAttribute.username, user?.username || '');
+            userSettingComponent.setAttribute(userSettingsFormAttribute.description, user?.description || '');
 
-            // Agregar `userSettingsForm` al contenedor `#formContainer`
             this.shadowRoot.querySelector('#formContainer')?.appendChild(userSettingComponent);
         }
     }

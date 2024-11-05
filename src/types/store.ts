@@ -16,7 +16,7 @@ export type User = {
 
 export type AppState = {
     screen: string;
-    publications: any[];
+    publications: postTypes[];
     user: User | null;
 };
 
@@ -24,12 +24,22 @@ export enum Screens {
     REGISTER = 'REGISTER',
     LOGIN = 'LOGIN',
     DASHBOARD = 'DASHBOARD',
-    SETTINGS = 'SETTINGS',
+    USERPROFILE = 'USERPROFILE',
+	MYFAVORITES = 'MYFAVORITES',
+	CREATEPOST = 'CREATEPOST',
+	USERSETTINGS = 'USERSETTINGS',
 }
 
 export enum Actions {
     NAVIGATE = 'NAVIGATE',
     GETPOSTS = 'GETPOSTS',
-    SET_USER = 'SET_USER',
-    UPDATE_USER = 'UPDATE_USER',
+    SETUSER = 'SETUSER',
+    UPDATEUSER = 'UPDATEUSER',
 }
+
+
+export interface postTypes {
+    image?: string;
+    description?: string;
+  }
+  

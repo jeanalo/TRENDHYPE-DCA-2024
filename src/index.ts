@@ -4,6 +4,8 @@ import { Screens } from './types/store';
 import './screens/login/login';
 import './screens/register/register';
 import './screens/userSetting/userSetting'; // Importa el screen de configuración del usuario
+import './screens/createpost/createPost';
+import './screens/userProfile/userProfile';
 
 class AppContainer extends HTMLElement {
     constructor() {
@@ -40,16 +42,30 @@ class AppContainer extends HTMLElement {
                     this.shadowRoot.appendChild(dashboard);
                     break;
 
-                case Screens.SETTINGS:  // Agrega el caso para SETTINGS
-                    console.log("Rendering user-settings-screen");
-                    const settings = document.createElement('user-settings-screen');
-                    this.shadowRoot.appendChild(settings);
+                case Screens.USERSETTINGS:
+                        console.log("Rendering user-settings-screen");
+                        const settings = document.createElement('user-settings-screen');
+                        this.shadowRoot.appendChild(settings);
+                        break;
+                    
+                case Screens.USERPROFILE:
+                    console.log("Rendering feed screen");
+                    const userProfile = document.createElement('user-feed-screen');
+                    this.shadowRoot.appendChild(userProfile);
                     break;
+
+                case Screens.CREATEPOST:
+                        console.log("Rendering feed screen");
+                        const createPost = document.createElement('create-post-screen');
+                        this.shadowRoot.appendChild(createPost);
+                        break;
 
                 default:
                     console.log("No valid screen selected");
                     break;
+                    
             }
+
         }
         console.log('Pantalla actual', appState.screen);
     }

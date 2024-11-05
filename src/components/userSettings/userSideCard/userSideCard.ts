@@ -1,14 +1,10 @@
-import { appState, dispatch } from '../../../store/index';
-import { Actions } from '../../../types/store';
-import { updateUserData } from '../../../utils/firebase';
-
+import { appState, addObserver } from '../../../store/index';
 
 export enum UserSideCardAttribute {
     name = 'name',
     username = 'username',
     description = 'description',
     profileImage = 'profileImage',
-    
 }
 
 class UserSideCard extends HTMLElement {
@@ -16,27 +12,30 @@ class UserSideCard extends HTMLElement {
     username?: string;
     description?: string;
     profileImage?: string;
-    
 
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-    }
-
-    static get observedAttributes() {
-        return Object.keys(UserSideCardAttribute);
-    }
-
-    attributeChangedCallback(name: UserSideCardAttribute, oldValue: string | null, newValue: string | null) {
-        (this as any)[name] = newValue;
-        this.render();
+        addObserver(this); // Registra UserSideCard como observador de appState
     }
 
     connectedCallback() {
+        this.updateAttributes();
         this.render();
     }
 
+    updateAttributes() {
+        const user = appState.user;
+        if (user) {
+            this.name = user.firstName;
+            this.username = user.username;
+            this.description = user.description;
+            this.profileImage = user.profileImage;
+        }
+    }
+
     render() {
+        this.updateAttributes(); // Actualiza atributos antes de renderizar
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
                 <style>
@@ -80,22 +79,6 @@ class UserSideCard extends HTMLElement {
                         color: #ccc;
                         margin-bottom: 20px;
                     }
-
-                    .stats {
-                        display: flex;
-                        justify-content: space-around;
-                        width: 100%;
-                        font-size: 1rem;
-                    }
-
-                    .stat {
-                        text-align: center;
-                    }
-
-                    .stat-value {
-                        font-weight: bold;
-                        font-size: 1.2rem;
-                    }
                 </style>
                 
                 <div class="side-card">
@@ -103,7 +86,6 @@ class UserSideCard extends HTMLElement {
                     <p class="name">${this.name || ''}</p>
                     <p class="username">${this.username || ''}</p>
                     <p class="description">${this.description || ''}</p>
-                    </div>
                 </div>
             `;
         }

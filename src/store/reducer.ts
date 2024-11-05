@@ -1,4 +1,3 @@
-// src/store/reducer.ts
 import { Actions } from '../types/store';
 
 export const reducer = (currentAction: any, currentState: any) => {
