@@ -2,11 +2,11 @@
 import { addObserver, appState } from './store/index';
 import { Screens } from './types/store';
 import './screens/login/login'
-import './screens/QuestionOfTheDay/QuestionOfTheDay'
 
 
 
-// import './screens/REGISTER/REGISTER';
+
+// import './screens/REGISTER/REGISTER';``
 // import './screens/LOGIN/LOGIN';
 // import './screens/DASHBOARD/DASHBOARD';
 
