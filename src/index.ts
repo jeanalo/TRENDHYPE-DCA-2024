@@ -6,6 +6,7 @@ import './screens/register/register';
 import './screens/userSetting/userSetting'; // Importa el screen de configuración del usuario
 import './screens/createpost/createPost';
 import './screens/userProfile/userProfile';
+import './screens/myFavorites/myfavorites';
 
 class AppContainer extends HTMLElement {
     constructor() {
@@ -59,6 +60,12 @@ class AppContainer extends HTMLElement {
                         const createPost = document.createElement('create-post-screen');
                         this.shadowRoot.appendChild(createPost);
                         break;
+
+                        case Screens.MYFAVORITES:
+                            console.log("Rendering favorites screen");
+                            const favorites = document.createElement('create-favorites-screen');
+                            this.shadowRoot.appendChild(favorites);
+                            break;
 
                 default:
                     console.log("No valid screen selected");

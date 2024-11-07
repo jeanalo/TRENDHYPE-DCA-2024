@@ -1,3 +1,8 @@
+import { addPosts } from '../../utils/firebase'; 
+import { navigate } from '../../store/actions';
+import { Screens } from '../../types/store';
+import { dispatch } from '../../store/index';
+
 import AppPost, { PostAttribute } from '../../components/Post/post-form/post-form';
 
 class CreatePostScreen extends HTMLElement {
@@ -33,8 +38,6 @@ class CreatePostScreen extends HTMLElement {
                         background-color: #232106;
                     }
 
-                   
-
                     .image-container {
                         flex: 0 0 40%;
                         height: 100%;
@@ -43,7 +46,6 @@ class CreatePostScreen extends HTMLElement {
                         justify-content: center;
                     }
 
-                    /* Imagen ocupando todo el contenedor de imagen */
                     .image-container img {
                         width: 100%;
                         height: 100%;
@@ -51,7 +53,7 @@ class CreatePostScreen extends HTMLElement {
                     }
 
                     .form-container {
-                        flex: 0 0 60% ;
+                        flex: 0 0 60%;
                         display: flex;
                         align-items: center;
                         justify-content: center;
@@ -61,10 +63,11 @@ class CreatePostScreen extends HTMLElement {
 
                     /* Ajustes responsivos para dispositivos móviles */
                     @media (max-width: 768px) {
-                        .content-wrapper {
+                        #create-post-container {
                             flex-direction: column;
                             align-items: center;
                             height: auto;
+                            padding: 10px;
                         }
 
                         .image-container {
@@ -75,6 +78,12 @@ class CreatePostScreen extends HTMLElement {
 
                         .image-container img {
                             height: auto;
+                        }
+
+                        .form-container {
+                            flex: 0 0 auto;
+                            width: 100%;
+                            padding: 20px;
                         }
                     }
                 </style>
@@ -88,7 +97,6 @@ class CreatePostScreen extends HTMLElement {
                 </div>
             `;
 
-            // Inserta el componente de formulario en el contenedor de formulario
             const appPostComponent = new AppPost();
             appPostComponent.setAttribute(PostAttribute.title, 'New Post');
             appPostComponent.setAttribute(PostAttribute.image, '');

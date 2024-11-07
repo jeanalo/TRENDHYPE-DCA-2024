@@ -16,13 +16,13 @@ export const reducer = (currentAction: any, currentState: any) => {
                 publications: payload,
             };
 
-        case Actions.SET_USER:
+        case Actions.SETUSER:
             return {
                 ...currentState,
                 user: payload,
             };
 
-        case Actions.UPDATE_USER:
+        case Actions.UPDATEUSER:
             return {
                 ...currentState,
                 user: { ...currentState.user, ...payload },

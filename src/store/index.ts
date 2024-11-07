@@ -3,7 +3,7 @@ import Storage from '../utils/storage';
 import { AppState, Observer, Screens } from '../types/store';
 
 const initialState: AppState = {
-    screen: Screens.REGISTER,
+    screen: Screens.USERPROFILE,
     publications: [],
     user: null,
 };

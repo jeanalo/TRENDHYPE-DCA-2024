@@ -1,4 +1,3 @@
-// src/types/store.ts
 
 export type Observer = { render: () => void } & HTMLElement;
 
@@ -25,16 +24,19 @@ export enum Screens {
     LOGIN = 'LOGIN',
     DASHBOARD = 'DASHBOARD',
     USERPROFILE = 'USERPROFILE',
-	MYFAVORITES = 'MYFAVORITES',
-	CREATEPOST = 'CREATEPOST',
-	USERSETTINGS = 'USERSETTINGS',
+    MYFAVORITES = 'MYFAVORITES',
+    CREATEPOST = 'CREATEPOST',
+    USERSETTINGS = 'USERSETTINGS',
 }
+
 
 export enum Actions {
     NAVIGATE = 'NAVIGATE',
     GETPOSTS = 'GETPOSTS',
     SETUSER = 'SETUSER',
     UPDATEUSER = 'UPDATEUSER',
+    SETUSERCREDENTIALS = 'SETUSERCREDENTIALS',
+    ADDPOSTS = 'ADDPOSTS'
 }
 
 

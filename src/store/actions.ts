@@ -22,3 +22,10 @@ export const setUser = (user: any) => {
         payload: user,
     };
 };
+
+export const setUserCredentials = (user: string) => {
+	return {
+		action: Actions.SETUSERCREDENTIALS,
+		payload:user,
+	};
+};

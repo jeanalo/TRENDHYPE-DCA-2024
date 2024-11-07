@@ -57,13 +57,21 @@ class AppPost extends HTMLElement {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
                 <style>
+<style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                        font-family: Arial, sans-serif;
+                    }
+
                     .form-container {
                         display: flex;
                         flex-direction: column;
                         align-items: flex-start;
-                        width: 100vw;
-                        max-width: 50%;
-                        margin: 40px ;
+                        width: 100%;
+                        max-width: 600px;
+                        margin: 40px;
                         color: #FCF3E4;
                     }
 
@@ -77,11 +85,11 @@ class AppPost extends HTMLElement {
 
                     .form-subtitle {
                         font-size: 0.8em;
-                        font-weight: ligth;
+                        font-weight: light;
                         color: #FCF3E4;
                         margin-bottom: 30px;
                         text-align: left;
-                        width: 400px;
+                        width: 100%;
                     }
 
                     label {
@@ -107,8 +115,7 @@ class AppPost extends HTMLElement {
                         background-color: #46410B;
                         color: #f5f5dc;
                         outline: none;
-                        width: 400px;
-
+                        width: 100%;
                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 255, 255, 0.1) inset;
                     }
 
@@ -120,13 +127,11 @@ class AppPost extends HTMLElement {
                     textarea {
                         resize: none;
                         height: 90px;
-                        width: 100%;
-                        width: 400px;
                     }
 
                     .form-button {
-                        padding: 5px;
-                        font-size: 0.8em;
+                        padding: 10px;
+                        font-size: 1em;
                         background-color: #E2D54B;
                         border: none;
                         border-radius: 15px;
@@ -143,6 +148,33 @@ class AppPost extends HTMLElement {
                         background-color: #AFA53A;
                         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 20px rgba(226, 213, 75, 0.8);
                     }
+
+                    /* Responsive styling for smaller screens */
+                    @media (max-width: 768px) {
+                        .form-container {
+                            width: 100%;
+                            padding: 10px;
+                            margin: 0;
+                        }
+
+                        .form-title {
+                            font-size: 1.5em;
+                        }
+
+                        .form-subtitle {
+                            font-size: 0.9em;
+                        }
+
+                        input[type="text"],
+                        textarea {
+                            font-size: 0.9em;
+                        }
+
+                        .form-button {
+                            width: 100%;
+                            padding: 10px;
+                        }
+                    }
                 </style>
 
                 <div class="form-container">
@@ -153,7 +185,7 @@ class AppPost extends HTMLElement {
                         <input id="image" placeholder="Upload file" type="text" value="${this.image || ''}"/>
                         
                         <label for="description">Description</label>
-                        <textarea id="description" placeholder="You need more words to say what you think, or show what you did, no problem, write to do everything you think." rows="4"></textarea>
+                        <textarea id="description" placeholder="Write your thoughts..."></textarea>
                         
                         <button type="submit" class="form-button">Publish</button>
                     </form>
