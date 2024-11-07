@@ -55,7 +55,7 @@ class UserFeedScreen extends HTMLElement {
             postElement.setAttribute(PostCardAttribute.image, post.image || "");
             postElement.setAttribute(PostCardAttribute.description, post.description || "");
             postContainer.appendChild(postElement);
-            console.log('Post renderizado:', post);  // Confirmación de renderización
+            console.log('Post renderizado:', post);  
         });
     }
 

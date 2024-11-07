@@ -9,13 +9,14 @@ export const reducer = (currentAction: any, currentState: any) => {
                 ...currentState,
                 screen: payload,
             };
-
+            
         case Actions.GETPOSTS:
-            return {
-                ...currentState,
-                publications: payload,
-            };
+                return {
+                    ...currentState,
+                    publications: payload,  
+                };
 
+                
         case Actions.SETUSER:
             return {
                 ...currentState,

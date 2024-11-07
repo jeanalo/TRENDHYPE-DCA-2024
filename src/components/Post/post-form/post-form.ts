@@ -57,7 +57,6 @@ class AppPost extends HTMLElement {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
                 <style>
-<style>
                     * {
                         margin: 0;
                         padding: 0;
@@ -182,7 +181,7 @@ class AppPost extends HTMLElement {
                     <p class="form-subtitle">Share your unique style with the world! Upload photos, add descriptions and tag trends - your fashion, your story!</p>
                     <form id="post-form">
                         <label for="image">Image</label>
-                        <input id="image" placeholder="Upload file" type="text" value="${this.image || ''}"/>
+                        <input id="image" placeholder="Upload file" type="file" value="${this.image || ''}"/>
                         
                         <label for="description">Description</label>
                         <textarea id="description" placeholder="Write your thoughts..."></textarea>

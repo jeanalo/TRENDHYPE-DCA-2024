@@ -12,7 +12,6 @@ export const fetchPostsAction = async () => {
     try {
         const posts = await getPosts();
 
-        // Retornar la acción con el tipo `GETPOSTS` y el payload de publicaciones
         return {
             action: Actions.GETPOSTS,
             payload: posts, // Asegúrate de que `posts` es un array sin duplicados

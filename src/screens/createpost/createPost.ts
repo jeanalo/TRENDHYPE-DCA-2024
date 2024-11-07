@@ -33,8 +33,11 @@ class CreatePostScreen extends HTMLElement {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
                 <style>
-                    *, *::before, *::after {
+                    * {
+                        margin: 0;
+                        padding: 0;
                         box-sizing: border-box;
+                        font-family: Arial, sans-serif;
                     }
 
                     #create-post-container {
