@@ -1,8 +1,7 @@
-import { addPosts } from '../../utils/firebase'; 
-import { navigate } from '../../store/actions';
+import { addPosts } from '../../utils/firebase';
+import { fetchPostsAction, navigate } from '../../store/actions';
 import { Screens } from '../../types/store';
 import { dispatch } from '../../store/index';
-
 import AppPost, { PostAttribute } from '../../components/Post/post-form/post-form';
 
 class CreatePostScreen extends HTMLElement {
@@ -15,6 +14,21 @@ class CreatePostScreen extends HTMLElement {
         this.render();
     }
 
+    async handleCreatePost(postData: { title: string; image: string; description: string }) {
+        try {
+            // Agregar la publicación a Firebase
+            await addPosts(postData);
+
+            // Actualizar las publicaciones en appState para reflejar la nueva lista
+            await dispatch(await fetchPostsAction()); // Despachar la acción para actualizar el estado global
+
+            // Redirigir a la pantalla de User Feed después de crear la publicación
+            dispatch(navigate(Screens.USERPROFILE));
+        } catch (error) {
+            console.error("Error al crear la publicación:", error);
+        }
+    }
+
     render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
@@ -23,19 +37,12 @@ class CreatePostScreen extends HTMLElement {
                         box-sizing: border-box;
                     }
 
-                    html, body {
-                        margin: 0;
-                        padding: 0;
-                        width: 100%;
-                        height: 100%;
-                        overflow: hidden;
-                    }
-
                     #create-post-container {
                         display: flex;
                         width: 100vw;
                         height: 100vh;
                         background-color: #232106;
+                        color: #FCF3E4;
                     }
 
                     .image-container {
@@ -61,29 +68,10 @@ class CreatePostScreen extends HTMLElement {
                         padding: 5px;
                     }
 
-                    /* Ajustes responsivos para dispositivos móviles */
                     @media (max-width: 768px) {
                         #create-post-container {
                             flex-direction: column;
-                            align-items: center;
                             height: auto;
-                            padding: 10px;
-                        }
-
-                        .image-container {
-                            flex: 0 0 auto;
-                            width: 100%;
-                            max-height: 50vh;
-                        }
-
-                        .image-container img {
-                            height: auto;
-                        }
-
-                        .form-container {
-                            flex: 0 0 auto;
-                            width: 100%;
-                            padding: 20px;
                         }
                     }
                 </style>
@@ -103,7 +91,14 @@ class CreatePostScreen extends HTMLElement {
             appPostComponent.setAttribute(PostAttribute.description, '');
             appPostComponent.setAttribute(PostAttribute.submitButton, 'Publish');
 
+            // Añadir el componente del formulario
             this.shadowRoot.querySelector('.form-container')?.appendChild(appPostComponent);
+
+            // Configurar el evento de publicación
+            appPostComponent.addEventListener('submitPost', (event: any) => {
+                const { title, image, description } = event.detail;
+                this.handleCreatePost({ title, image, description });
+            });
         }
     }
 }

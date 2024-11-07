@@ -1,12 +1,16 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, query, where } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { appState } from '../store';
 
 let db: any;
 let auth: any;
+let storage: any;
 
-const getFirebaseInstance = async () => {
+export const getFirebaseInstance = async () => {
     if (!db) {
+        const { initializeApp } = await import('firebase/app');
+        const { getFirestore } = await import('firebase/firestore');
+        const { getAuth } = await import('firebase/auth');
+        const { getStorage } = await import('firebase/storage');
+
         const firebaseConfig = {
             apiKey: "AIzaSyD-u3jetStWs47fMyfvAGsF5X4ggGwej4A",
             authDomain: "trendhype.firebaseapp.com",
@@ -20,14 +24,17 @@ const getFirebaseInstance = async () => {
         const app = initializeApp(firebaseConfig);
         db = getFirestore(app);
         auth = getAuth(app);
+        storage = getStorage();
     }
-    return { db, auth };
+    return { db, auth, storage };
 };
 
 // Función para agregar publicaciones
 export const addPosts = async (publication: any) => {
     try {
         const { db } = await getFirebaseInstance();
+        const { collection, addDoc } = await import('firebase/firestore');
+
         const postsCollection = collection(db, 'publications');
         await addDoc(postsCollection, publication);
         console.log('Publicación añadida con éxito');
@@ -40,15 +47,41 @@ export const addPosts = async (publication: any) => {
 export const getPosts = async () => {
     try {
         const { db } = await getFirebaseInstance();
+        const { collection, getDocs } = await import('firebase/firestore');
+
         const postsCollection = collection(db, 'publications');
         const querySnapshot = await getDocs(postsCollection);
         const data: any[] = [];
+
         querySnapshot.forEach((doc) => {
             data.push(doc.data());
         });
+
         return data;
     } catch (error) {
         console.error('Error obteniendo los documentos:', error);
+        return [];
+    }
+};
+
+// Función para obtener publicaciones por usuario
+export const getPostByUser = async () => {
+    try {
+        const { db } = await getFirebaseInstance();
+        const { collection, getDocs, query, where } = await import('firebase/firestore');
+
+        const ref = collection(db, 'publications');
+        const q = query(ref, where('userUid', '==', appState.user));
+        const querySnapshot = await getDocs(q);
+        const data: any[] = [];
+
+        querySnapshot.forEach((doc) => {
+            data.push(doc.data());
+        });
+
+        return data;
+    } catch (error) {
+        console.error('Error obteniendo documentos del usuario:', error);
         return [];
     }
 };
@@ -57,6 +90,9 @@ export const getPosts = async () => {
 export const registerUser = async (credentials: any) => {
     try {
         const { auth, db } = await getFirebaseInstance();
+        const { createUserWithEmailAndPassword } = await import('firebase/auth');
+        const { collection, addDoc } = await import('firebase/firestore');
+
         const userCredential = await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
 
         const usersCollection = collection(db, 'users');
@@ -68,7 +104,7 @@ export const registerUser = async (credentials: any) => {
         };
 
         await addDoc(usersCollection, userDoc);
-        return userCredential.user.uid; // Devuelve el UID del usuario
+        return userCredential.user.uid;
     } catch (error) {
         console.error('Error al registrar el usuario:', error);
         return null;
@@ -79,6 +115,8 @@ export const registerUser = async (credentials: any) => {
 export const getUserData = async (uid: string) => {
     try {
         const { db } = await getFirebaseInstance();
+        const { collection, getDocs, query, where } = await import('firebase/firestore');
+
         const usersCollection = collection(db, 'users');
         const q = query(usersCollection, where("uid", "==", uid));
         const querySnapshot = await getDocs(q);
@@ -98,6 +136,8 @@ export const getUserData = async (uid: string) => {
 export const updateUserData = async (uid: string, userData: Record<string, any>): Promise<void> => {
     try {
         const { db } = await getFirebaseInstance();
+        const { doc, updateDoc } = await import('firebase/firestore');
+
         const userDocRef = doc(db, 'users', uid);
         await updateDoc(userDocRef, userData);
         console.log('User data updated successfully');
@@ -110,6 +150,8 @@ export const updateUserData = async (uid: string, userData: Record<string, any>)
 export const loginUser = async (email: string, password: string) => {
     try {
         const { auth } = await getFirebaseInstance();
+        const { signInWithEmailAndPassword } = await import('firebase/auth');
+
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         console.log('Usuario logueado:', userCredential.user);
         return true;
@@ -123,9 +165,71 @@ export const loginUser = async (email: string, password: string) => {
 export const logOut = async (): Promise<void> => {
     try {
         const { auth } = await getFirebaseInstance();
+        const { signOut } = await import('firebase/auth');
+
         await signOut(auth);
         console.log("Usuario deslogueado exitosamente");
     } catch (error) {
         console.error("Error al cerrar sesión:", error);
     }
+};
+
+// Función específica para imágenes de perfil
+export const getProfileImage = async (id: string) => {
+    const { storage } = await getFirebaseInstance();
+    const { ref, getDownloadURL } = await import('firebase/storage');
+
+    const storageRef = ref(storage, 'imagesProfile/' + id);
+    return getDownloadURL(storageRef).catch((error) => {
+        console.error(error);
+        return null;
+    });
+};
+
+// Función específica para imágenes de publicaciones
+export const getPostImage = async (id: string) => {
+    const { storage } = await getFirebaseInstance();
+    const { ref, getDownloadURL } = await import('firebase/storage');
+
+    const storageRef = ref(storage, 'imagesPosts/' + id);
+    return getDownloadURL(storageRef).catch((error) => {
+        console.error(error);
+        return null;
+    });
+};
+
+// Función para subir imágenes de perfil
+export const uploadProfileImage = async (file: File, id: string) => {
+    const { storage } = await getFirebaseInstance();
+    const { ref, uploadBytes } = await import('firebase/storage');
+
+    const storageRef = ref(storage, 'imagesProfile/' + id);
+    return uploadBytes(storageRef, file)
+        .then((snapshot) => {
+            console.log('Profile image uploaded');
+            return snapshot;
+        })
+        .catch((error) => {
+            console.error('Error uploading profile image:', error);
+            return null;
+        });
+};
+
+
+
+// Función para subir imágenes de publicaciones
+export const uploadPostImage = async (file: File, id: string) => {
+    const { storage } = await getFirebaseInstance();
+    const { ref, uploadBytes } = await import('firebase/storage');
+
+    const storageRef = ref(storage, 'imagesPosts/' + id);
+    return uploadBytes(storageRef, file)
+        .then((snapshot) => {
+            console.log('Post image uploaded');
+            return snapshot;
+        })
+        .catch((error) => {
+            console.error('Error uploading post image:', error);
+            return null;
+        });
 };

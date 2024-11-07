@@ -9,8 +9,8 @@ class favoritePosts extends HTMLElement {
     }
 
     async connectedCallback() {
+        console.log('FavoritePosts component connected');
         this.render();
-        console.log('Favorite screen loaded');
     }
 
     render() {
@@ -65,51 +65,19 @@ class favoritePosts extends HTMLElement {
                         gap: 16px;
                         padding-left: 10px;
                     }
-
-                    @media (max-width: 768px) {
-                        #my-favorites-container {
-                            flex-direction: column;
-                        }
-
-                        .sidebar {
-                            width: 100%;
-                            padding: 10px;
-                            align-items: center;
-                        }
-
-                        .main-content {
-                            padding: 10px;
-                        }
-
-                        .feed-title {
-                            font-size: 1.5rem;
-                            text-align: center;
-                        }
-
-                        #posts-container {
-                            gap: 10px;
-                            justify-content: center;
-                        }
-                    }
                 </style>
                 
                 <div id="my-favorites-container">
                     <div class="sidebar"></div>
                     <div class="main-content">
                         <button class="add-button" id="add-button">Add</button>
-
-                        <div class="friends-container">
-                            <div class="friends-title">Friends</div>
-                            <div id="friends-list"></div>
-                        </div>
-
                         <div class="feed-title">Feed</div>
                         <section id="posts-container"></section>
                     </div>
                 </div>
             `;
 
-            // Agregar UserSideCard en la barra lateral
+            // Agregar el componente UserSideCard a la barra lateral
             const userSideCardComponent = new UserSideCard();
             userSideCardComponent.setAttribute(UserSideCardAttribute.name, 'Jean Alomia');
             userSideCardComponent.setAttribute(UserSideCardAttribute.username, '@Jeanalomia');
@@ -122,6 +90,8 @@ class favoritePosts extends HTMLElement {
             } else {
                 console.error('Sidebar not found');
             }
+        } else {
+            console.error('Shadow root not found');
         }
     }
 }

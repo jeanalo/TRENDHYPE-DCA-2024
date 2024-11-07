@@ -1,6 +1,8 @@
 
-export type Observer = { render: () => void } & HTMLElement;
-
+export type Observer = {
+    render: () => void;
+  };
+  
 export type User = {
     uid: string;
     firstName: string;
@@ -13,11 +15,7 @@ export type User = {
     profileImage?: string;
 };
 
-export type AppState = {
-    screen: string;
-    publications: postTypes[];
-    user: User | null;
-};
+
 
 export enum Screens {
     REGISTER = 'REGISTER',
@@ -39,9 +37,13 @@ export enum Actions {
     ADDPOSTS = 'ADDPOSTS'
 }
 
-
 export interface postTypes {
     image?: string;
     description?: string;
   }
-  
+
+export interface AppState {
+    screen: Screens;
+    publications: postTypes[];
+  }
+

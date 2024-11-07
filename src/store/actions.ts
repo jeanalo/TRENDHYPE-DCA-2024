@@ -9,11 +9,21 @@ export const navigate = (screen: Screens) => {
 };
 
 export const fetchPostsAction = async () => {
-    const posts = await getPosts();
-    return {
-        action: Actions.GETPOSTS,
-        payload: posts,
-    };
+    try {
+        const posts = await getPosts();
+
+        // Retornar la acción con el tipo `GETPOSTS` y el payload de publicaciones
+        return {
+            action: Actions.GETPOSTS,
+            payload: posts, // Asegúrate de que `posts` es un array sin duplicados
+        };
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return {
+            action: Actions.GETPOSTS,
+            payload: [], // En caso de error, retorna un array vacío
+        };
+    }
 };
 
 export const setUser = (user: any) => {

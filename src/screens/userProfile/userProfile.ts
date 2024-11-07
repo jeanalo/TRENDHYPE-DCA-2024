@@ -1,9 +1,19 @@
-import { fetchPostsAction, navigate } from "../../store/actions";   
+import { fetchPostsAction, navigate } from "../../store/actions";
 import { dispatch, appState } from "../../store/index";
 import { Screens } from "../../types/store";
 import PostCard, { PostCardAttribute } from '../../components/Post/post-card/post-card';
-import UserSideCard, { UserSideCardAttribute } from '../../components/userSettings/userSideCard/userSideCard';
 import FriendCard, { FriendCardAttribute } from '../../components/userProfile/userfriends';
+import UserSideCard, { UserSideCardAttribute} from "../../components/userSettings/userSideCard/userSideCard";
+
+interface Post {
+    image: string;
+    description: string;
+}
+
+interface Friend {
+    username: string;
+    image: string;
+}
 
 class UserFeedScreen extends HTMLElement {
     constructor() {
@@ -14,48 +24,43 @@ class UserFeedScreen extends HTMLElement {
     async connectedCallback() {
         this.render();
         await this.loadPosts();
-        this.subscribeToNewPosts();
+        this.bindEvents();
+        this.renderUserSideCard();
+        this.renderFriends();
     }
 
     async loadPosts() {
-        if (!appState.publications || appState.publications.length === 0) {
-            const postsAction = await fetchPostsAction();
-            dispatch(postsAction);
-        }
+        const postsAction = await fetchPostsAction();
+        dispatch(postsAction);
+        console.log('Publicaciones en el estado global:', appState.publications);  // Verificar publicaciones cargadas
         this.renderPosts();
     }
-
-    subscribeToNewPosts() {
-        appState.subscribe('publications', this.renderPosts.bind(this));
-    }
-
-  
 
     renderPosts() {
         const postContainer = this.shadowRoot?.querySelector("#posts-container");
         if (!postContainer) {
-            console.log("postContainer no encontrado en el DOM.");
+            console.warn("postContainer not found in the DOM.");
             return;
         }
 
         postContainer.innerHTML = '';
 
         if (appState.publications.length === 0) {
-            console.log("No se encontraron publicaciones para renderizar.");
             postContainer.innerHTML = '<p>No hay publicaciones disponibles.</p>';
             return;
         }
 
-        appState.publications.forEach((post: any) => {
+        appState.publications.forEach((post: Post) => {
             const postElement = new PostCard();
             postElement.setAttribute(PostCardAttribute.image, post.image || "");
             postElement.setAttribute(PostCardAttribute.description, post.description || "");
             postContainer.appendChild(postElement);
-            console.log('Post renderizado:', post);
+            console.log('Post renderizado:', post);  // Confirmación de renderización
         });
     }
 
     navigateToCreatePost() {
+        console.log("Navigating to CREATEPOST...");
         dispatch(navigate(Screens.CREATEPOST));
     }
 
@@ -86,6 +91,7 @@ class UserFeedScreen extends HTMLElement {
                         flex-direction: column;
                         align-items: center;
                         margin-right: 20px;
+                      
                     }
 
                     .main-content {
@@ -118,7 +124,7 @@ class UserFeedScreen extends HTMLElement {
                     }
 
                     .friends-title {
-                        font-size: 1.5 rem;
+                        font-size: 1rem;
                         font-weight: bold;
                         margin-bottom: 10px;
                     }
@@ -131,7 +137,7 @@ class UserFeedScreen extends HTMLElement {
                     }
 
                     .feed-title {
-                        font-size: 1.5rem;
+                        font-size: 1rem;
                         font-weight: bold;
                         margin: 20px 0;
                     }
@@ -172,49 +178,49 @@ class UserFeedScreen extends HTMLElement {
                 </style>
                 
                 <div id="user-feed-container">
-                    <div class="sidebar">
-                    </div>
-
+                    <div class="sidebar"></div>
                     <div class="main-content">
                         <button class="add-button" id="add-button">Add</button>
-
                         <div class="friends-container">
                             <div class="friends-title">Friends</div>
                             <div id="friends-list"></div>
                         </div>
-
                         <div class="feed-title">Feed</div>
                         <section id="posts-container"></section>
                     </div>
                 </div>
             `;
-
-            const addButton = this.shadowRoot.querySelector("#add-button");
-            addButton?.addEventListener("click", this.navigateToCreatePost);
-
-            const userSideCardComponent = new UserSideCard();
-            userSideCardComponent.setAttribute(UserSideCardAttribute.name, 'Jean Alomia');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.username, '@Jeanalomia');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.description, 'Chasing dreams and making memories');
-
-            const sidebar = this.shadowRoot.querySelector('.sidebar');
-            sidebar?.appendChild(userSideCardComponent);
-
-            const friendsList = this.shadowRoot.querySelector('#friends-list');
-            const friends = [
-                { username: 'Luna', image: 'https://i.pinimg.com/564x/7e/b6/38/7eb63851a0a63a09fa94275805fbd47b.jpg' },
-                { username: 'Juan', image: 'https://i.pinimg.com/564x/ea/56/dc/ea56dc7075c619f0738f77661a3a44fb.jpg' },
-            ];
-
-            friends.forEach(friend => {
-                const friendCard = document.createElement('friend-card') as FriendCard;
-                friendCard.setAttribute(FriendCardAttribute.image, friend.image);
-                friendCard.setAttribute(FriendCardAttribute.username, friend.username);
-                friendsList?.appendChild(friendCard);
-            });
-
-            this.loadPosts();
         }
+    }
+
+    bindEvents() {
+        const addButton = this.shadowRoot?.querySelector("#add-button");
+        addButton?.addEventListener("click", this.navigateToCreatePost.bind(this));
+    }
+
+    renderUserSideCard() {
+        const userSideCard = new UserSideCard();
+        userSideCard.setAttribute(UserSideCardAttribute.name, 'Jean Alomia');
+        userSideCard.setAttribute(UserSideCardAttribute.username, '@Jeanalomia');
+        userSideCard.setAttribute(UserSideCardAttribute.description, 'Chasing dreams and making memories');
+
+        const sidebar = this.shadowRoot?.querySelector('.sidebar');
+        sidebar?.appendChild(userSideCard);
+    }
+
+    renderFriends() {
+        const friendsList = this.shadowRoot?.querySelector('#friends-list');
+        const friends: Friend[] = [
+            { username: 'Luna', image: 'https://i.pinimg.com/564x/7e/b6/38/7eb63851a0a63a09fa94275805fbd47b.jpg' },
+            { username: 'Juan', image: 'https://i.pinimg.com/564x/ea/56/dc/ea56dc7075c619f0738f77661a3a44fb.jpg' },
+        ];
+
+        friends.forEach(friend => {
+            const friendCard = new FriendCard();
+            friendCard.setAttribute(FriendCardAttribute.image, friend.image);
+            friendCard.setAttribute(FriendCardAttribute.username, friend.username);
+            friendsList?.appendChild(friendCard);
+        });
     }
 }
 
