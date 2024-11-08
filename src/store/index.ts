@@ -6,6 +6,7 @@ import { Screens } from '../types/store';
 const initialState: AppState = {
     screen: Screens.REGISTER,
     publications: [],
+    user: "USER_ID_OBTENIDO_DEL_LOGIN",
 };
 
 

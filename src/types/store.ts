@@ -3,6 +3,14 @@ export type Observer = {
     render: () => void;
   };
   
+
+
+export interface AppState {
+    screen: Screens;
+    publications: postTypes[];
+    user: string; }
+
+
 export type User = {
     uid: string;
     firstName: string;
@@ -41,10 +49,5 @@ export enum Actions {
 export interface postTypes {
     image?: string;
     description?: string;
-  }
-
-export interface AppState {
-    screen: Screens;
-    publications: postTypes[];
   }
 

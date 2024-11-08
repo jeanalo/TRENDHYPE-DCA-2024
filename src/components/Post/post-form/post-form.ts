@@ -1,11 +1,12 @@
 import { addPosts, uploadPostImage, getPostImage } from '../../../utils/firebase';
 import { navigate } from '../../../store/actions';
 import { Screens } from '../../../types/store';
-import { dispatch } from '../../../store/index';
+import { dispatch, appState } from '../../../store/index'; // Importamos appState para acceder al userID
 
 const postInfo = {
     image: '',
     description: '',
+    userID: '' // Agregamos el userID para almacenarlo en Firestore
 };
 
 export enum PostAttribute {
@@ -14,7 +15,6 @@ export enum PostAttribute {
     description = 'description',
     submitButton = 'submitButton'
 }
-
 
 class AppPost extends HTMLElement {
     imageFile?: File;
@@ -51,8 +51,18 @@ class AppPost extends HTMLElement {
         }
 
         try {
+            // Obtiene el userID desde el estado global
+            const userID = appState.user;
+            if (!userID) {
+                throw new Error("El userID no está disponible. Asegúrate de que el usuario esté autenticado.");
+            }
+
+            // Agrega el userID al objeto postInfo
+            postInfo.userID = userID;
+
             console.log('Iniciando subida de imagen...');
-            const uniqueFileName = await uploadPostImage(this.imageFile, `posts/${Date.now()}_${this.imageFile.name}`);
+            const uniqueFileName = `posts/${userID}_${Date.now()}_${this.imageFile.name}`;
+            await uploadPostImage(this.imageFile, uniqueFileName);
             const imageUrl = await getPostImage(uniqueFileName);
 
             if (imageUrl) {
@@ -61,13 +71,12 @@ class AppPost extends HTMLElement {
                 throw new Error("No se pudo obtener la URL de la imagen.");
             }
 
-            // Añade el post a Firestore
-            
+            // Añade el post a Firestore incluyendo el userID
             await addPosts(postInfo);
             alert('Post creado exitosamente');
 
             // Redirige al perfil de usuario
-            console.log("Redirigiendo a USERPROFILE..."); // Depuración
+            console.log("Redirigiendo a USERPROFILE...");
             dispatch(navigate(Screens.USERPROFILE));
         } catch (error) {
             console.error("Error al crear el post:", error);
@@ -79,7 +88,114 @@ class AppPost extends HTMLElement {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
                 <style>
-                    /* Aquí van los estilos */
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                        font-family: Arial, sans-serif;
+                    }
+
+                    .form-container {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        width: 100%;
+                        max-width: 600px;
+                        margin: 40px;
+                        color: #FCF3E4;
+                        background-color: #333;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                    }
+
+                    .form-title {
+                        font-size: 2em;
+                        font-weight: bold;
+                        color: #FCF3E4;
+                        margin-bottom: 10px;
+                        text-align: left;
+                    }
+
+                    label {
+                        font-size: 1em;
+                        font-weight: bold;
+                        color: #FCF3E4;
+                        margin-bottom: 4px;
+                    }
+
+                    form {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 20px;
+                        width: 100%;
+                    }
+
+                    input[type="file"],
+                    textarea {
+                        padding: 15px;
+                        font-size: 1em;
+                        border: none;
+                        border-radius: 15px;
+                        background-color: #46410B;
+                        color: #f5f5dc;
+                        outline: none;
+                        width: 100%;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 255, 255, 0.1) inset;
+                    }
+
+                    input[type="file"]::placeholder,
+                    textarea::placeholder {
+                        color: #232106;
+                    }
+
+                    textarea {
+                        resize: none;
+                        height: 90px;
+                    }
+
+                    .form-button {
+                        padding: 10px;
+                        font-size: 1em;
+                        background-color: #E2D54B;
+                        border: none;
+                        border-radius: 15px;
+                        color: #f5f5dc; 
+                        cursor: pointer;
+                        font-weight: bold;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 0 15px rgba(226, 213, 75, 0.6);
+                        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                        width: 100px;
+                        text-align: center;
+                    }
+
+                    .form-button:hover {
+                        background-color: #AFA53A;
+                        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 20px rgba(226, 213, 75, 0.8);
+                    }
+
+                    /* Responsive styling for smaller screens */
+                    @media (max-width: 768px) {
+                        .form-container {
+                            width: 100%;
+                            padding: 10px;
+                            margin: 0;
+                        }
+
+                        .form-title {
+                            font-size: 1.5em;
+                        }
+
+                        input[type="file"],
+                        textarea {
+                            font-size: 0.9em;
+                        }
+
+                        .form-button {
+                            width: 100%;
+                            padding: 10px;
+                        }
+                    }
                 </style>
 
                 <div class="form-container">
@@ -104,7 +220,6 @@ class AppPost extends HTMLElement {
             imageInput?.addEventListener("change", this.changeImage.bind(this));
             descriptionInput?.addEventListener("change", this.changeDescription.bind(this));
             form?.addEventListener("submit", this.submitForm.bind(this));
-
         }
     }
 }
