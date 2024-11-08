@@ -35,27 +35,31 @@ class favoritePosts extends HTMLElement {
                     }
 
                     .sidebar {
-                        width: 250px;
-                        padding: 20px;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        background-color: #3d3a0b;
-                        margin-right: 20px;
+                    
                     }
 
                     .main-content {
                         flex: 1;
                         display: flex;
                         flex-direction: column;
-                        padding: 20px;
                         overflow-y: auto;
+                        width: 100vw;
+                        height: 100vh;
                     }
 
-                    .feed-title {
-                        font-size: 2rem;
+                    .banner {
+                        width: 100%;
+                        height: 200px;
+                        background-image: url('https://i.pinimg.com/564x/c6/b3/65/c6b365e86c8fe53165c72b554ec16b48.jpg'); 
+                        background-size: cover;
+                        background-position: center;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #FCF3E4;
+                        font-size: 2.5rem;
                         font-weight: bold;
-                        margin: 20px 0;
+                        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
                     }
 
                     #posts-container {
@@ -70,8 +74,7 @@ class favoritePosts extends HTMLElement {
                 <div id="my-favorites-container">
                     <div class="sidebar"></div>
                     <div class="main-content">
-                        <button class="add-button" id="add-button">Add</button>
-                        <div class="feed-title">Feed</div>
+                        <div class="banner">Favorites</div>
                         <section id="posts-container"></section>
                     </div>
                 </div>
@@ -97,4 +100,5 @@ class favoritePosts extends HTMLElement {
 }
 
 customElements.define("my-favorites-screen", favoritePosts);
+
 export default favoritePosts;

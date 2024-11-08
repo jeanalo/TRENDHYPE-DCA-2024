@@ -61,11 +61,12 @@ class AppContainer extends HTMLElement {
                         this.shadowRoot.appendChild(createPost);
                         break;
 
-                        case Screens.MYFAVORITES:
-                            console.log("Rendering favorites screen");
-                            const favorites = document.createElement('create-favorites-screen');
-                            this.shadowRoot.appendChild(favorites);
-                            break;
+                case Screens.MYFAVORITES:
+                        console.log("Rendering favorites screen");
+                        const favorites = document.createElement('my-favorites-screen'); // Cambia a 'my-favorites-screen'
+                        this.shadowRoot.appendChild(favorites);
+                        break;
+
 
                 default:
                     console.log("No valid screen selected");
