@@ -15,7 +15,7 @@ export const getFirebaseInstance = async () => {
             apiKey: "AIzaSyD-u3jetStWs47fMyfvAGsF5X4ggGwej4A",
             authDomain: "trendhype.firebaseapp.com",
             projectId: "trendhype",
-            storageBucket: "trendhype.appspot.com",
+            storageBucket: "trendhype.firebasestorage.app",
             messagingSenderId: "128542655290",
             appId: "1:128542655290:web:452dd40b18fa84b4cc4603",
             measurementId: "G-8LGLM4JT81"
@@ -174,62 +174,27 @@ export const logOut = async (): Promise<void> => {
     }
 };
 
-// Función específica para imágenes de perfil
-export const getProfileImage = async (id: string) => {
-    const { storage } = await getFirebaseInstance();
-    const { ref, getDownloadURL } = await import('firebase/storage');
-
-    const storageRef = ref(storage, 'imagesProfile/' + id);
-    return getDownloadURL(storageRef).catch((error) => {
-        console.error(error);
-        return null;
-    });
-};
-
-// Función específica para imágenes de publicaciones
-export const getPostImage = async (id: string) => {
+// Function to get the download URL for a post image
+export const getPostImage = async (id: string): Promise<string | null> => {
     const { storage } = await getFirebaseInstance();
     const { ref, getDownloadURL } = await import('firebase/storage');
 
     const storageRef = ref(storage, 'imagesPosts/' + id);
     return getDownloadURL(storageRef).catch((error) => {
-        console.error(error);
+        console.error("Error fetching image URL:", error);
         return null;
     });
 };
 
-// Función para subir imágenes de perfil
-export const uploadProfileImage = async (file: File, id: string) => {
-    const { storage } = await getFirebaseInstance();
-    const { ref, uploadBytes } = await import('firebase/storage');
-
-    const storageRef = ref(storage, 'imagesProfile/' + id);
-    return uploadBytes(storageRef, file)
-        .then((snapshot) => {
-            console.log('Profile image uploaded');
-            return snapshot;
-        })
-        .catch((error) => {
-            console.error('Error uploading profile image:', error);
-            return null;
-        });
-};
-
-
-
-// Función para subir imágenes de publicaciones
-export const uploadPostImage = async (file: File, id: string) => {
+// Function to upload an image for a post and return the file identifier
+export const uploadPostImage = async (file: File, id: string): Promise<string> => {
     const { storage } = await getFirebaseInstance();
     const { ref, uploadBytes } = await import('firebase/storage');
 
     const storageRef = ref(storage, 'imagesPosts/' + id);
-    return uploadBytes(storageRef, file)
-        .then((snapshot) => {
-            console.log('Post image uploaded');
-            return snapshot;
-        })
-        .catch((error) => {
-            console.error('Error uploading post image:', error);
-            return null;
-        });
+    // Use `await` to handle the upload and then return the ID
+    await uploadBytes(storageRef, file);
+    console.log('File uploaded successfully');
+    return id; // Return the ID which can be used to retrieve the image URL later
 };
+

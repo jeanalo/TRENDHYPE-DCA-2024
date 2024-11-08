@@ -4,7 +4,7 @@ import { AppState, Observer } from '../types/store';
 import { Screens } from '../types/store';
 
 const initialState: AppState = {
-    screen: Screens.CREATEPOST,
+    screen: Screens.REGISTER,
     publications: [],
 };
 
