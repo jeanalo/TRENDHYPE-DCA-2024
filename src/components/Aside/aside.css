@@ -1,0 +1,147 @@
+/* CSS original para el aside */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 20px;
+    height: 100vh;
+    width: 100%;
+    background-color: #343109;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+aside p {
+    font-weight: 600;
+    font-size: 20px;
+    align-self: flex-start;
+}
+
+.InputContainer {
+    height: 45px;
+    max-width: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FCF3E4;
+    border-radius: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0 18px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+}
+
+.input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background-color: #FCF3E4;
+    color: #BCB3AA;
+}
+
+.input::placeholder {
+    color: #BCB3AA;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.labelforsearch {
+    cursor: text;
+    padding: 0px 12px;
+}
+
+.searchIcon {
+    width: 13px;
+}
+
+.todays-mood {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 370px;
+    height: 160px;
+    border-radius: 30px;
+    padding-top: 12px;
+    background-color: #9A5311;
+}
+
+.todays-mood h3 {
+    font-family: "Times New Roman", serif;
+    font-weight: 400;
+    font-size: 2rem;
+    font-style: italic;
+    color: #E2D54B;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    border-radius: 30px;
+    background-color: #B2D1EE;
+}
+
+.profile .caption {
+    padding: 40px 0 0 30px;
+    align-self: flex-start;
+    color: #9A5311;
+}
+
+.profile .profile-info .name {
+    font-size: 1.5rem;
+    color: #9A5311;
+}
+
+.profile .profile-info .quote {
+    font-weight: 200;
+    color: #9A5311;
+    font-size: 1rem;
+}
+
+.profile .leads {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 30px;
+    width: 100%;
+    border-radius: 0 0 30px 30px;
+    padding: 30px 0;
+    background-color: #9A5311;
+}
+
+.profile .leads .lead {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile .leads .lead p {
+    color: #E2D54B;
+}
+
+img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Ajustes solo para pantallas menores a 768px */
+@media screen and (max-width: 768px) {
+    aside {
+        display: none; /* Oculta completamente el aside */
+    }
+}

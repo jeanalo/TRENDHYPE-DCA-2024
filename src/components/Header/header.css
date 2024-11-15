@@ -1,0 +1,80 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.header-component {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 78px;
+    padding: 0 60px;
+    border-bottom: 1px solid #42411F;
+    background-color: #232106;
+}
+
+.header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.header-component img {
+    margin-left: 0;
+}
+
+.header-component ul {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espacio entre "For You" y "Following" */
+    list-style: none;
+    margin: 0 auto; /* Centra el contenedor de navegación */
+}
+
+.header-component li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 78px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0 8px;
+}
+
+.header-component .active {
+    border-bottom: 4px solid #E2D54B;
+}
+
+.header-component li:hover {
+    border-bottom: 4px solid #E2D54B;
+}
+
+/* Responsive: estructura en columna a partir de 768px o menos */
+@media screen and (max-width: 768px) {
+    .header-component {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        height: auto;
+    }
+
+    .header-wrapper {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        width: auto;
+    }
+
+    .header-component ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-component img {
+        margin-left: 0;
+    }
+}
