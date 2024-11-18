@@ -1,6 +1,7 @@
 import { appState, dispatch } from '../../../store/index';
 import { Actions, Screens } from '../../../types/store';
 import '../../logOutButton/logOutButton';
+import ProfileImage, { ProfileImageAttribute } from '../../ProfileImage/ProfileImage';
 
 export enum UserSideCardAttribute {
     name = 'name',
@@ -36,9 +37,9 @@ class UserSideCard extends HTMLElement {
 
     setupEventListeners() {
         const dashboardLogo = this.shadowRoot?.querySelector('#dashboardLogo');
+        const profileImage = this.shadowRoot?.querySelector('profile-image');
         const favoritesLink = this.shadowRoot?.querySelector('#favoritesLink');
         const settingsLink = this.shadowRoot?.querySelector('#settingsLink');
-        const profileImage = this.shadowRoot?.querySelector('#profileImage');
 
         dashboardLogo?.addEventListener('click', () => {
             dispatch({ action: Actions.NAVIGATE, payload: Screens.DASHBOARD });
@@ -78,8 +79,8 @@ class UserSideCard extends HTMLElement {
                         flex-direction: column;
                         align-items: center;
                         background-color: #3d3a0b;
+                        padding-top: 6rem; /* Agrega más espacio arriba */
                         color: #FCF3E4;
-                        padding-top: 20px;
                         text-align: center;
                         transition: width 0.3s ease;
                     }
@@ -89,16 +90,6 @@ class UserSideCard extends HTMLElement {
                         top: 20px;
                         left: 20px;
                         width: 80px;
-                        cursor: pointer;
-                    }
-
-                    .profile-image {
-                        width: 100px;
-                        height: 100px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                        margin-top: 80px;
-                        margin-bottom: 10px;
                         cursor: pointer;
                     }
 
@@ -150,7 +141,7 @@ class UserSideCard extends HTMLElement {
                     /* Responsive styles */
                     @media (max-width: 768px) {
                         .side-card {
-                            position: relative; /* Change to relative for small screens */
+                            position: relative;
                             width: 100%;
                             height: auto;
                             padding-top: 10px;
@@ -161,13 +152,6 @@ class UserSideCard extends HTMLElement {
                             width: 60px;
                             top: 10px;
                             left: 10px;
-                        }
-
-                        .profile-image {
-                            width: 80px;
-                            height: 80px;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
                         }
 
                         .name {
@@ -200,11 +184,6 @@ class UserSideCard extends HTMLElement {
                             left: 5px;
                         }
 
-                        .profile-image {
-                            width: 60px;
-                            height: 60px;
-                        }
-
                         .name {
                             font-size: 1rem;
                         }
@@ -227,7 +206,11 @@ class UserSideCard extends HTMLElement {
                 <div class="side-card">
                     <img id="dashboardLogo" class="dashboard-logo" src="https://raw.githubusercontent.com/jeanalo/IMG-assets/refs/heads/main/TrendHypeLOGO.png" alt="TrendHype Logo">
                     
-                    <img id="profileImage" class="profile-image" src="${this.profileImage || 'https://i.pinimg.com/564x/ec/0f/a7/ec0fa7e18612c6a5239742cfd9dd6c46.jpg'}" alt="User Profile Image">
+                    <!-- Usando el componente de imagen reutilizable -->
+                    <profile-image 
+                        ${ProfileImageAttribute.src}="${this.profileImage || 'https://i.pinimg.com/564x/ec/0f/a7/ec0fa7e18612c6a5239742cfd9dd6c46.jpg'}"
+                        ${ProfileImageAttribute.alt}="User Profile Image">
+                    </profile-image>
                     
                     <p class="name">${this.name || 'Nombre no disponible'}</p>
                     <p class="username">${this.username || ''}</p>

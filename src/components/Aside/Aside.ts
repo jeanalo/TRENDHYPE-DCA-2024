@@ -1,3 +1,4 @@
+import ProfileImage, { ProfileImageAttribute } from '../ProfileImage/ProfileImage';
 import { dispatch } from '../../store/index';
 import { navigate } from '../../store/actions';
 import { Screens } from '../../types/store';
@@ -15,7 +16,7 @@ class Aside extends HTMLElement {
 
     // Método para agregar eventos de clic
     addEventListeners() {
-        const profileImage = this.shadowRoot?.querySelector('.profile-info img');
+        const profileImage = this.shadowRoot?.querySelector('profile-image');
         const profileName = this.shadowRoot?.querySelector('.profile-info .name');
 
         // Navegar a la pantalla de perfil de usuario al hacer clic en la imagen o el nombre
@@ -53,7 +54,11 @@ class Aside extends HTMLElement {
                     <section class="profile">
                         <p class="caption">Profile</p>
                         <div class="profile-info">
-                            <img src="https://i.pinimg.com/originals/48/ba/1a/48ba1a4c2e697e1a1ed117919a9421d5.jpg" alt="Profile" />
+                            <!-- Usando el nuevo componente profile-image -->
+                            <profile-image
+                                ${ProfileImageAttribute.src}="https://i.pinimg.com/originals/48/ba/1a/48ba1a4c2e697e1a1ed117919a9421d5.jpg"
+                                ${ProfileImageAttribute.alt}="User Profile Image">
+                            </profile-image>
                             <p class="name"> Jeanalomia </p>
                             <p class="quote"> Chasing dreams and making memories </p>
                         </div>

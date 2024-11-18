@@ -1,0 +1,167 @@
+import { fetchPostsAction } from "../../store/actions";
+import { dispatch, appState } from "../../store/index";
+import PostCard, { PostCardAttribute } from '../../components/Post/post-card/post-card';
+
+interface Post {
+    image: string;
+    description: string;
+}
+
+class FriendsProfileScreen extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+
+    async connectedCallback() {
+        this.render();
+        await this.loadPosts();
+        this.renderFriendProfile(); // Renderizamos la imagen, username y descripción
+    }
+
+    async loadPosts() {
+        const postsAction = await fetchPostsAction();
+        dispatch(postsAction);
+        console.log('Publicaciones en el estado global:', appState.publications);  // Verificar publicaciones cargadas
+        this.renderPosts();
+    }
+
+    renderPosts() {
+        const postContainer = this.shadowRoot?.querySelector("#posts-container");
+        if (!postContainer) {
+            console.warn("postContainer not found in the DOM.");
+            return;
+        }
+
+        postContainer.innerHTML = '';
+
+        if (appState.publications.length === 0) {
+            postContainer.innerHTML = '<p>No hay publicaciones disponibles.</p>';
+            return;
+        }
+
+        appState.publications.forEach((post: Post) => {
+            const postElement = new PostCard();
+            postElement.setAttribute(PostCardAttribute.image, post.image || "");
+            postElement.setAttribute(PostCardAttribute.description, post.description || "");
+            postContainer.appendChild(postElement);
+            console.log('Post renderizado:', post);  
+        });
+    }
+
+    render() {
+        if (this.shadowRoot) {
+            this.shadowRoot.innerHTML = `
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                        font-family: Arial, sans-serif;
+                    }
+
+                    #friend-profile-container {
+                        display: flex;
+                        flex-direction: column;
+                        width: 100vw;
+                        height: 100vh;
+                        background-color: #232106;
+                        color: #FCF3E4;
+                    }
+
+                    .profile-header {
+                        display: flex;
+                        align-items: center;
+                        padding: 20px;
+                        border-bottom: 1px solid #E2D54B;
+                    }
+
+                    .profile-image {
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        margin-right: 20px;
+                    }
+
+                    .profile-info {
+                        display: flex;
+                        flex-direction: column;
+                    }
+
+                    .username {
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                    }
+
+                    .description {
+                        font-size: 1rem;
+                        color: #ccc;
+                    }
+
+                    .feed-title {
+                        font-size: 1rem;
+                        font-weight: bold;
+                        margin: 20px 0 10px 20px;
+                    }
+
+                    #posts-container {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: flex-start;
+                        gap: 16px;
+                        padding: 20px;
+                    }
+
+                    @media (max-width: 768px) {
+                        #friend-profile-container {
+                            flex-direction: column;
+                        }
+
+                        .profile-header {
+                            flex-direction: column;
+                            align-items: center;
+                        }
+
+                        .profile-image {
+                            margin-bottom: 10px;
+                        }
+
+                        .username {
+                            text-align: center;
+                        }
+
+                        .feed-title {
+                            text-align: center;
+                        }
+                    }
+                </style>
+                
+                <div id="friend-profile-container">
+                    <div class="profile-header">
+                        <img 
+                            class="profile-image" 
+                            src="https://i.pinimg.com/originals/48/ba/1a/48ba1a4c2e697e1a1ed117919a9421d5.jpg" 
+                            alt="Friend Profile Image">
+                        <div class="profile-info">
+                            <p class="username">Friend Username</p>
+                            <p class="description">Lover of books, coffee, and endless conversations.</p>
+                        </div>
+                    </div>
+                    <div class="feed-title">Feed</div>
+                    <section id="posts-container"></section>
+                </div>
+            `;
+        }
+    }
+
+    renderFriendProfile() {
+        // Esta función se puede extender si deseas que los datos sean dinámicos.
+        // Actualmente, la imagen, el username y la descripción están directamente en el HTML.
+        // Si necesitas obtenerlos dinámicamente, puedes hacerlo desde el estado global o un servicio.
+    }
+}
+
+customElements.define("friend-profile-screen", FriendsProfileScreen);
+export default FriendsProfileScreen;
