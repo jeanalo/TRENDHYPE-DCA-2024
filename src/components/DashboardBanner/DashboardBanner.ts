@@ -7,7 +7,7 @@ class DashboardBanner extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
     }
-
+// HolaEstoEsUnaPrueba
     connectedCallback() {
         this.render();
         this.addEventListeners(); // Agregar eventos después de renderizar
