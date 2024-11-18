@@ -1,0 +1,90 @@
+/* CSS original */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.dashboard-banner {
+    display: flex;
+    background: rgb(94, 93, 69);
+    background: linear-gradient(125deg, rgba(94, 93, 69, 1) 0%, rgba(69, 68, 42, 1) 33%, rgba(50, 49, 23, 1) 100%);
+    border-radius: 46px;
+    border: 1px solid #42411F;
+    height: 20rem;
+}
+
+#daily-tracker {
+    display: inline-block;
+    font-weight: bold;
+    color: #9A5311;
+    background-color: #B2D1EE;
+    border-radius: 5px;
+    padding: 5px 30px;
+    margin: 0;
+}
+
+#answer-daily-question {
+    color: #B2D1EE;
+}
+
+.info-banner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    margin: 50px;
+}
+
+.dashboard-banner h2 {
+    text-align: start;
+    font-size: 42px;
+}
+
+.dashboard-banner a {
+    font-weight: bold;
+    color: #9A5311;
+    background-color: #E2D54B;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 10px 50px;
+    display: inline-block;
+}
+
+img {
+    position: relative;
+    bottom: 21.8rem; /* my favourite CSS directive ;) */
+    right: -18.5rem;
+    background-size: cover;
+    width: 24.8rem;
+    height: 22.35rem;
+}
+
+/* Ajustes solo para pantallas menores a 768px */
+@media screen and (max-width: 768px) {
+    .dashboard-banner {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: auto; /* Ajuste automático de altura */
+        padding: 20px;
+    }
+
+    .info-banner-container {
+        align-items: center;
+        text-align: center;
+        margin: 0;
+        gap: 10px;
+    }
+
+    #daily-tracker,
+    #answer-daily-question,
+    .dashboard-banner h2,
+    .dashboard-banner a {
+        text-align: center;
+    }
+
+    .dashboard-banner img {
+        display: none; /* Oculta la imagen en pantallas pequeñas */
+    }
+}

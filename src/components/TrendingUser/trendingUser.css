@@ -1,0 +1,81 @@
+/* CSS original */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.trending-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    border-radius: 40px;
+    height: 100%;
+    padding: 100px 15px 40px;
+    background-color: #E2D34B;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    max-width: 180px;
+    gap: 4px 0;
+}
+
+.user-info p:nth-child(1) {
+    align-self: flex-start;
+    font-size: 26px;
+    font-weight: 600;
+    color: #9A5311;
+}
+
+.user-info p {
+    align-self: flex-end;
+    font-size: 17px;
+    font-weight: 600;
+    color: #9A5311;
+}
+
+.user-info span {
+    display: block;
+    align-self: center;
+    height: 2px;
+    width: 50%;
+    background-color: #9A5311;
+}
+
+.user-desc {
+    text-align: start;
+    color: #9A5311;
+}
+
+/* Ajustes solo para pantallas menores a 768px */
+@media screen and (max-width: 768px) {
+    .trending-user {
+        gap: 30px; /* Reduce el espacio entre elementos */
+        padding: 50px 10px 20px; /* Ajusta el padding para una disposición compacta */
+    }
+
+    .user-info {
+        width: 90%; /* Aumenta el ancho del contenedor para llenar mejor la pantalla */
+        max-width: 100%; /* Permite el ajuste completo en pantallas pequeñas */
+    }
+
+    .user-info p:nth-child(1),
+    .user-info p {
+        font-size: 18px; /* Reduce el tamaño de fuente */
+        text-align: center; /* Centra el texto */
+    }
+
+    .user-info span {
+        width: 80%; /* Aumenta el ancho de la línea para ocupar más espacio visual */
+    }
+
+    .user-desc {
+        font-size: 14px; /* Reduce el tamaño de fuente para el texto descriptivo */
+        text-align: center; /* Centra el texto */
+    }
+}

@@ -1,0 +1,29 @@
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    filter: blur(10px);
+    transform: scale(1.03);
+    z-index: -1;
+    background-color: aquamarine;
+}
+
+#loginWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    position: relative;
+}
+
+#banner-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    width: 80vw;
+    max-width: 1280px;
+}

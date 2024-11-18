@@ -1,0 +1,120 @@
+/* Estilos para el contenedor principal de las tarjetas */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Tres columnas uniformes */
+    gap: 15px; /* Espacio entre las tarjetas */
+    padding: 10px;
+    justify-items: center;
+    align-items: start;
+}
+
+/* Estilos para cada tarjeta */
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #FCF3E4;
+    border-radius: 20px;
+    overflow: hidden;
+    width: 200px; /* Ancho fijo para cada tarjeta */
+    height: 320px; /* Altura fija para cada tarjeta */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor de imagen ocupando el 60% de la altura de la tarjeta */
+.card-image-container {
+    width: 100%;
+    height: 60%;
+    overflow: hidden;
+    position: relative;
+    background-color: #ddd;
+}
+
+.card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Posicionamiento absoluto para el botón y los iconos */
+.card-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    display: flex;
+    align-items: center;
+    gap: 0 5px;
+    padding: 5px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: rgba(178, 209, 238, 0.8);
+    color: #FCF3E4;
+    border: none;
+    z-index: 2;
+}
+
+.card-button span {
+    width: 14px;
+    height: 2px;
+    background-color: #FCF3E4;
+}
+
+.icons-container {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+
+.icons-container svg {
+    cursor: pointer;
+    fill: #FCF3E4;
+    width: 18px;
+    height: 18px;
+}
+
+/* Contenedor de texto ocupando el 40% restante */
+.card .info {
+    padding: 10px;
+    font-size: 10px;
+    color: #9A5311;
+    background-color: #FCF3E4;
+    border-radius: 0 0 20px 20px;
+    text-align: center;
+    height: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Ajuste solo para pantallas menores a 768px */
+@media screen and (max-width: 768px) {
+    .cards-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centra las tarjetas horizontalmente */
+        gap: 10px; /* Ajusta el espacio entre las tarjetas */
+        padding: 10px;
+        width: 100%; /* Asegura que ocupe el ancho completo */
+    }
+
+    .card {
+        width: 80%; /* Disminuye el ancho al 80% del contenedor */
+        height: 150vw; /* Aumenta la altura para una forma más vertical */
+        max-height: 400px; /* Ajuste máximo para evitar que sea demasiado larga */
+        margin: 0 auto; /* Centra la tarjeta dentro del contenedor */
+    }
+
+    /* Ajuste para la imagen dentro de la tarjeta */
+    .card-image-container {
+        height: 60%; /* Ajusta la altura de la imagen en relación al nuevo diseño */
+    }
+
+    .card .info {
+        height: 40%; /* Ajusta el contenedor de texto para llenar el resto del espacio */
+    }
+}

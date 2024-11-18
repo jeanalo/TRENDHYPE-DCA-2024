@@ -1,0 +1,233 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #232106;
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    padding-top: 40px;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    padding-top: 0px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.banner {
+    position: relative;
+    margin: 20px auto;
+    margin-bottom: 50px;
+}
+
+.banner img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.banner-text {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 30px;
+    border-radius: 10px;
+    max-width: 80%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.banner-text p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Estilo de fondo y borde redondeado para los títulos de preguntas */
+.question-title {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    color: #FFFFFF;
+    border-radius: 30px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#question1 h2 {
+    background-color: #E2D54B;
+    color: #9A5311;
+}
+
+#question2 h2 {
+    background-color: #9A5311;
+    color: #E2D54B;
+}
+
+#question3 h2 {
+    background-color: #B2D1EE;
+    color: #9A5311;
+}
+
+.quiz {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.question {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.question h2 {
+    font-size: 18px;
+    color: #FFA726;
+    margin-bottom: 10px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    margin: 5px auto;
+    padding: 10px;
+    background-color: #46410B;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.option span {
+    margin-left: 8px;
+    text-align: center;
+}
+
+.option:hover {
+    background-color: #787878;
+}
+
+/* Estilo del botón de submit */
+.submit-button {
+    position: relative;
+    width: 25%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.submit-button img {
+    width: 100%;
+    border-radius: 20px;
+    filter: blur(2px);
+}
+
+.submit-button::before {
+    content: 'SUBMIT';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .banner {
+        position: relative;
+        height: auto;
+    }
+
+    .banner img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .banner-text {
+        position: absolute;
+        top: 70%; /* Baja el contenedor un poco más */
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 6px 12px; /* Tamaño reducido del padding */
+        max-width: 70%;
+        background: rgba(255, 255, 255, 0.2); /* Efecto de vidrio */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        text-align: center;
+    }
+
+    /* Texto reducido */
+    .banner-text p {
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+        visibility: hidden;
+        position: relative;
+    }
+
+    .banner-text p::after {
+        content: "READY TO DISCOVER YOUR STYLE VIBE FOR THE DAY?";
+        visibility: visible;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    .question {
+        max-width: 100%;
+    }
+
+    .question h2 {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    .option {
+        width: 90%;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .submit-button {
+        width: 40%;
+        margin: 10px auto;
+    }
+
+    .submit-button::before {
+        font-size: 16px;
+    }
+}
