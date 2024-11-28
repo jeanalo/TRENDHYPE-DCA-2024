@@ -1,63 +1,124 @@
-import { fetchPostsAction, navigate } from "../../store/actions";
-import { dispatch, appState } from "../../store/index";
+import { appState, dispatch } from "../../store/index";
 import { Screens } from "../../types/store";
-import PostCard, { PostCardAttribute } from '../../components/Post/post-card/post-card';
 import FriendCard, { FriendCardAttribute } from '../../components/userProfile/userfriends';
-import UserSideCard, { UserSideCardAttribute} from "../../components/userSettings/userSideCard/userSideCard";
+import UserSideCard, { UserSideCardAttribute } from "../../components/userSettings/userSideCard/userSideCard";
+import { navigate } from "../../store/actions";
+import { getFollowingUsers, getPostByUser, getUserByUID } from "../../utils/firebase";
+import { DashboardSectionItem } from "../../types/dashboardforyoutypes";
+import MyCard, { Attribute } from "../../components/Card/Card";
 
-interface Post {
-    image: string;
-    description: string;
-}
-
-interface Friend {
-    username: string;
-    image: string;
-}
 
 class UserFeedScreen extends HTMLElement {
+    userid ? : string;
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
     }
 
-    async connectedCallback() {
+    static get observedAttributes() {
+        return ["userid"];
+    }
+
+    attributeChangedCallback(name: string, oldValue: string | undefined, newValue: string | undefined) {
+        if (name === "userid" && newValue !== oldValue) {
+            this.userid = newValue;
+            this.renderPosts();
+            this.renderFollowingUsers();
+        }
+    }
+
+     connectedCallback() {
         this.render();
-        await this.loadPosts();
         this.bindEvents();
-        this.renderUserSideCard();
-        this.renderFriends();
+        this.getUserData();
     }
 
-    async loadPosts() {
-        const postsAction = await fetchPostsAction();
-        dispatch(postsAction);
-        console.log('Publicaciones en el estado global:', appState.publications);  // Verificar publicaciones cargadas
-        this.renderPosts();
-    }
+    async getUserData() {
 
-    renderPosts() {
-        const postContainer = this.shadowRoot?.querySelector("#posts-container");
-        if (!postContainer) {
-            console.warn("postContainer not found in the DOM.");
+        const userID = this.userid; // Obtener el UID del amigo desde el estado global
+
+        if (!userID) {
+            console.error('No se proporcionó el UID del amigo.');
             return;
         }
 
-        postContainer.innerHTML = '';
+        const user = await getUserByUID(userID);
 
-        if (appState.publications.length === 0) {
-            postContainer.innerHTML = '<p>No hay publicaciones disponibles.</p>';
+        if (user) {
+            console.log(user);
+            
+            const userSideCard = new UserSideCard();
+            userSideCard.setAttribute(UserSideCardAttribute.name, `${user.firstname} ${user.lastname}`);
+            userSideCard.setAttribute(UserSideCardAttribute.username, user.username);
+            userSideCard.setAttribute(UserSideCardAttribute.profileimage, user.profileImage );
+            userSideCard.setAttribute(UserSideCardAttribute.description, user.description);
+            userSideCard.setAttribute(UserSideCardAttribute.userid, this.userid!)
+    
+            const sidebar = this.shadowRoot?.querySelector('.sidebar');
+            sidebar?.appendChild(userSideCard);
+        }
+        
+    }
+
+    async renderFollowingUsers() {
+        if (!this.userid) {
+            console.error("No se encontró el UID del usuario actual.");
             return;
         }
+    
+        const followingUsers = await getFollowingUsers(this.userid);
+        console.log("Usuarios seguidos:", followingUsers);
+    
+        const usersContainer = this.shadowRoot?.querySelector("#friends-list");
 
-        appState.publications.forEach((post: Post) => {
-            const postElement = new PostCard();
-            postElement.setAttribute(PostCardAttribute.image, post.image || "");
-            postElement.setAttribute(PostCardAttribute.description, post.description || "");
-            postContainer.appendChild(postElement);
-            console.log('Post renderizado:', post);  
-        });
+        if (usersContainer) {
+            usersContainer.innerHTML = "";
+
+            followingUsers.forEach((user) => {
+                const friendCard = this.ownerDocument.createElement('friend-card') as FriendCard;
+                friendCard.setAttribute(FriendCardAttribute.username, user.firstname);
+                friendCard.setAttribute(FriendCardAttribute.image, user.profileimage)
+                friendCard.setAttribute(FriendCardAttribute.userid, user.id)
+                usersContainer?.appendChild(friendCard)
+
+            });
+
+  
+        }
     }
+
+    async renderPosts() {
+        if (!this.userid) {
+            console.log('No userid passed');
+            return
+        }
+
+        const posts = await getPostByUser(this.userid);
+        const postContainer = this.shadowRoot?.querySelector('#posts-container')
+
+        if (postContainer) {
+            postContainer.innerHTML = '';
+        }
+
+        if (posts.length === 0) {
+            const addPostMsg = this.ownerDocument.createElement('p')
+            addPostMsg.innerHTML = 'Add any post'
+            postContainer?.appendChild(addPostMsg);
+        }
+
+        posts.forEach((post:DashboardSectionItem) => {
+            const postCard =  this.ownerDocument.createElement('my-card') as MyCard;
+            postCard.setAttribute(Attribute.image, post.image);
+            postCard.setAttribute(Attribute.description, post.description);
+            postCard.setAttribute(Attribute.likes, post.likes?.toString());
+            postCard.setAttribute(Attribute.postid, post.id);
+            postCard.setAttribute(Attribute.userid, appState.user)
+            postContainer?.appendChild(postCard);
+        })
+
+    }
+
 
     navigateToCreatePost() {
         console.log("Navigating to CREATEPOST...");
@@ -186,7 +247,9 @@ class UserFeedScreen extends HTMLElement {
                             <div id="friends-list"></div>
                         </div>
                         <div class="feed-title">Feed</div>
-                        <section id="posts-container"></section>
+                        <section id="posts-container">
+                        
+                        </section>
                     </div>
                 </div>
             `;
@@ -198,30 +261,7 @@ class UserFeedScreen extends HTMLElement {
         addButton?.addEventListener("click", this.navigateToCreatePost.bind(this));
     }
 
-    renderUserSideCard() {
-        const userSideCard = new UserSideCard();
-        userSideCard.setAttribute(UserSideCardAttribute.name, 'Jean Alomia');
-        userSideCard.setAttribute(UserSideCardAttribute.username, '@Jeanalomia');
-        userSideCard.setAttribute(UserSideCardAttribute.description, 'Chasing dreams and making memories');
 
-        const sidebar = this.shadowRoot?.querySelector('.sidebar');
-        sidebar?.appendChild(userSideCard);
-    }
-
-    renderFriends() {
-        const friendsList = this.shadowRoot?.querySelector('#friends-list');
-        const friends: Friend[] = [
-            { username: 'Luna', image: 'https://i.pinimg.com/564x/7e/b6/38/7eb63851a0a63a09fa94275805fbd47b.jpg' },
-            { username: 'Juan', image: 'https://i.pinimg.com/564x/ea/56/dc/ea56dc7075c619f0738f77661a3a44fb.jpg' },
-        ];
-
-        friends.forEach(friend => {
-            const friendCard = new FriendCard();
-            friendCard.setAttribute(FriendCardAttribute.image, friend.image);
-            friendCard.setAttribute(FriendCardAttribute.username, friend.username);
-            friendsList?.appendChild(friendCard);
-        });
-    }
 }
 
 customElements.define("user-feed-screen", UserFeedScreen);

@@ -1,14 +1,69 @@
 import UserSideCard, { UserSideCardAttribute } from '../../components/userSettings/userSideCard/userSideCard';
-import UserSettingsForm, { userSettingsFormAttribute } from '../../components/userSettings/userSettingsForm/userSettingsForm';
+import userSettingsForm, { userSettingsFormAttribute } from '../../components/userSettings/userSettingsForm/userSettingsForm';
+import { getUserByUID } from '../../utils/firebase';
 
 class UserSettingsScreen extends HTMLElement {
+    userid?: string;
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
     }
 
+
+    static get observedAttributes() {
+        return ["userid"];
+    }
+
+    attributeChangedCallback(name: string, oldValue: string | undefined, newValue: string | undefined) {
+        if (name === "userid" && newValue !== oldValue) {
+            this.userid = newValue;
+        }
+    }
+
     connectedCallback() {
         this.render();
+        this.fetchUserData()
+    }
+
+    async fetchUserData() {
+
+        const userID = this.userid; // Obtener el UID del amigo desde el estado global
+
+        if (!userID) {
+            console.error('No se proporcionó el UID del amigo.');
+            return;
+        }
+
+        const user = await getUserByUID(userID); // Obtener información del usuario desde Firebase
+
+        if (user) {
+            console.log(user);
+            const userSideCard = new UserSideCard();
+            userSideCard.setAttribute(UserSideCardAttribute.name, `${user.firstname} ${user.lastname}`);
+            userSideCard.setAttribute(UserSideCardAttribute.username, user.username);
+            userSideCard.setAttribute(UserSideCardAttribute.profileimage, user.profileImage );
+            userSideCard.setAttribute(UserSideCardAttribute.description, user.description);
+            userSideCard.setAttribute(UserSideCardAttribute.userid, this.userid!)
+
+            const sidebar = this.shadowRoot?.querySelector('.sidebar');
+            sidebar?.appendChild(userSideCard);
+
+            // Crear y configurar el componente `UserSettingsForm`
+            const userSettingsFormComponent = this.ownerDocument.createElement('user-settings-form') as userSettingsForm;
+            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.firstname, user.firstname);
+            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.lastname, user.lastname);
+            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.email, user.email);
+            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.username, user.username);
+            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.description, user.description);
+
+            const mainContent = this.shadowRoot?.querySelector('.main-content');
+            mainContent?.appendChild(userSettingsFormComponent);
+            // Agregar `UserSettingsForm` al contenedor `#formContainer`
+            // this.shadowRoot?.querySelector('.formContainer')?.appendChild(userSettingsFormComponent);
+        }
+
+
     }
 
     render() {
@@ -86,31 +141,11 @@ class UserSettingsScreen extends HTMLElement {
 
                  
                     <div class="main-content">
-                        <user-settings-form></user-settings-form> 
+                        
                     </div>
                 </div>
             `;
 
-            const userSideCardComponent = new UserSideCard();
-            userSideCardComponent.setAttribute(UserSideCardAttribute.name, 'Jean Alomia');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.username, '@Jeanalomia');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.description, 'Chasing dreams and making memories');
-
-            const sidebar = this.shadowRoot.querySelector('.sidebar');
-            sidebar?.appendChild(userSideCardComponent);
-
-            // Crear y configurar el componente `UserSettingsForm`
-            const userSettingsFormComponent = new UserSettingsForm();
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.firstName, 'Jean');
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.lastName, 'Alomia');
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.email, 'jean.alomia@example.com');
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.country, 'Country');
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.city, 'City');
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.username, 'jeanalomia');
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.description, 'Chasing dreams and making memories');
-
-            // Agregar `UserSettingsForm` al contenedor `#formContainer`
-            this.shadowRoot.querySelector('#formContainer')?.appendChild(userSettingsFormComponent);
         }
     }
 }
