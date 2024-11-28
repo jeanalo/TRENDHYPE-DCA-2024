@@ -7,6 +7,7 @@ import './screens/dashboardForYou/dashboardForYou';
 import './screens/dashboardFollowing/dashboardFollowing';
 import './screens/questionoftheday/questionoftheday';
 import './screens/userProfile/userProfile';
+import './screens/friendProfile/friendProfile';
 import './screens/createPost/createPost';
 import './screens/userSettings/userSettings'
 import './screens/myFavorites/myFavorites';
@@ -61,11 +62,18 @@ class AppContainer extends HTMLElement {
 
                 case Screens.USERPROFILE:
                     const userprofile = document.createElement('user-feed-screen');
+                    userprofile.setAttribute('userid', appState.user)
                     this.shadowRoot.appendChild(userprofile);
+                    break;
+
+                case Screens.FRIENDPROFILE:
+                    const friendprofile = document.createElement('friend-feed-screen');
+                    this.shadowRoot.appendChild(friendprofile);
                     break;
 
                 case Screens.MYFAVORITES:
                     const myfavorites = document.createElement('my-favorites-screen');
+                    myfavorites.setAttribute('userid', appState.user)
                     this.shadowRoot.appendChild(myfavorites);
                     break;
                         
@@ -76,6 +84,7 @@ class AppContainer extends HTMLElement {
 
                 case Screens.USERSETTINGS:
                     const usersettings = document.createElement('user-settings-screen');
+                    usersettings.setAttribute('userid', appState.user)
                     this.shadowRoot.appendChild(usersettings);
                     break;
 

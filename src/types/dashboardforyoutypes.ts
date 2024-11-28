@@ -1,4 +1,7 @@
 export interface DashboardSectionItem {
-    img: string;
+    image: string;
     description: string;
+    likes : number;
+    id : string;
+    userID : string;
 }

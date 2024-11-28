@@ -2,10 +2,16 @@ export type Observer = { render: () => void } & HTMLElement;
 
 export type AppState = {
 	screen: string;
-	publications: postTypes[];
+	publications: [];
 	user: string;
+	friend : string;
+	moodmsg : string;
 	
 };
+
+export enum PersistanceKeys {
+	"STORE" = "STORE",
+  }  
 
 export interface Favorite {
     img: string;
@@ -19,10 +25,10 @@ export enum Screens {
 	'DASHBOARDFOllOWING' = 'DASHBOARDFOLLOWING',
 	'QUESTIONOFTHEDAY' = 'QUESTIONOFTHEDAY',
 	'USERPROFILE' = 'USERPROFILE',
+	'FRIENDPROFILE' = 'FRIENDPROFILE',
 	'MYFAVORITES' = 'MYFAVORITES',
 	'CREATEPOST' = 'CREATEPOST',
 	'USERSETTINGS' = 'USERSETTINGS',
-	'FRIENDSPROFILE' = 'FRIENDSPROFILE',
 
 }
 
@@ -35,9 +41,7 @@ export enum Actions {
     ADDPOSTS = 'ADDPOSTS',
     GETPRODUCTSBYUSER = 'GETPRODUCTSBYUSER',
 	ADD_FAVORITE = 'ADD_FAVORITE',
+	SETFRIEND = 'SETFRIEND',
+	SETMOODMSG = 'SETMOODMSG'
 }
 
-export interface postTypes {
-    image?: string;
-    description?: string;
-  }
