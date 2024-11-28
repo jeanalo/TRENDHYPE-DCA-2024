@@ -1,27 +1,23 @@
-import { appState, dispatch } from '../../../store/index';
-import { Actions } from '../../../types/store';
+import { appState } from '../../../store/index';
+import { deleteProfileImage, getFirebaseInstance, getUserProfileImage, updateUserProfile, uploadUserProfileImage } from '../../../utils/firebase';
 
-// src/components userSettingsForm.ts
 export enum userSettingsFormAttribute {
-    firstName = 'firstName',
-    lastName = 'lastName',
+    firstname = 'firstname',
+    lastname = 'lastname',
     email = 'email',
-    country = 'country',
-    city = 'city',
     username = 'username',
     description = 'description',
     profileImage = 'profileImage',
 }
 
 class userSettingsForm extends HTMLElement {
-    firstName?: string;
-    lastName?: string;
+    firstname?: string;
+    lastname?: string;
     email?: string;
-    country?: string;
-    city?: string;
     username?: string;
     description?: string;
     profileImage?: string;
+    file?: File;
 
     constructor() {
         super();
@@ -39,12 +35,82 @@ class userSettingsForm extends HTMLElement {
 
     connectedCallback() {
         this.render();
+        this.setupEventListeners();
+    }
+
+    async handleSaveChanges(e: Event) {
+        e.preventDefault();
+        const userId = appState.user;
+
+        if (!userId) {
+            console.error("User ID is not available.");
+            return;
+        }
+
+        const updatedData: Record<string, any> = {
+            firstname: this.shadowRoot?.querySelector<HTMLInputElement>('#firstName')?.value || this.firstname,
+            lastname: this.shadowRoot?.querySelector<HTMLInputElement>('#lastName')?.value || this.lastname,
+            email: this.shadowRoot?.querySelector<HTMLInputElement>('#email')?.value || this.email,
+            username: this.shadowRoot?.querySelector<HTMLInputElement>('#username')?.value || this.username,
+            description: this.shadowRoot?.querySelector<HTMLInputElement>('#description')?.value || this.description,
+        };
+
+        if (this.file) {
+            updatedData.profileImage = await this.uploadImage(this.file);
+        }
+
+        try {
+            await updateUserProfile(userId, updatedData);
+            alert('Profile updated successfully.');
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('There was an error updating your profile.');
+        }
+    }
+
+    async uploadImage(file: File) {
+        const userId = appState.user;
+
+        if (!userId) {
+            throw new Error("User ID is not available.");
+        }
+
+        const { db } = await getFirebaseInstance()
+        const { collection, query, where, getDocs } = await import('firebase/firestore');
+
+        const usersCollection = collection(db, "users");
+        const userQuery = query(usersCollection, where("uid", "==", userId));
+        const querySnapshot = await getDocs(userQuery);
+
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const currentImageUrl = userDoc.data().profileImage;
+
+            if (currentImageUrl) {
+                await deleteProfileImage(currentImageUrl);
+            }
+        }
+
+        const uniqueFileName = `imageUsers/${userId}_${Date.now()}_${file.name}`;
+        await uploadUserProfileImage(file, uniqueFileName);
+        return await getUserProfileImage(uniqueFileName);
+    }
+
+    setupEventListeners() {
+        const saveButton = this.shadowRoot?.querySelector('button');
+        const fileInput = this.shadowRoot?.querySelector<HTMLInputElement>('#profileImageInput');
+
+        saveButton?.addEventListener('click', this.handleSaveChanges.bind(this));
+        fileInput?.addEventListener('change', (e: Event) => {
+            const target = e.target as HTMLInputElement;
+            this.file = target.files ? target.files[0] : undefined;
+        });
     }
 
     render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
-        <style>
+                <style>
             * {
                 margin: 0;
                 padding: 0;
@@ -150,59 +216,39 @@ class userSettingsForm extends HTMLElement {
                 }
             }
         </style>
-
-        <div class="form-container">
-            <div class="form-title">Settings</div>
-            <div class="form-subtitle">Edit Profile</div>
-            <form>
-                <!-- Sección para First Name y Last Name en dos columnas -->
-                <div class="input-group">
-                    <div>
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" placeholder="First Name" value="${this.firstName || ''}">
-                    </div>
-                    <div>
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" placeholder="Last Name" value="${this.lastName || ''}">
-                    </div>
+                <div class="form-container">
+                    <div class="form-title">Settings</div>
+                    <form>
+                        <div class="input-group">
+                            <div>
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" placeholder="${this.firstname}" value="">
+                            </div>
+                            <div>
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" placeholder="${this.lastname}" value="">
+                            </div>
+                        </div>
+                        <label for="email">e-mail address</label>
+                        <input type="email" id="email" placeholder="${this.email}" value="">
+                        
+                        <label for="profileImageInput">Profile Image</label>
+                        <input type="file" id="profileImageInput">
+                        
+                        <div class="input-group">
+                            <div>
+                                <label for="username">Username</label>
+                                <input type="text" id="username" placeholder=${this.username} value="">
+                            </div>
+                            <div>
+                                <label for="description">Description</label>
+                                <input type="text" id="description" placeholder=${this.description} value="">
+                            </div>
+                        </div>
+                        <button type="submit">Save Changes</button>
+                    </form>
                 </div>
-                
-                <label for="email">e-mail address</label>
-                <input type="email" id="email" placeholder="e-mail address" value="${this.email || ''}">
-                
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Change your password">
-                
-                <div class="form-section-title">Personal Address</div>
-                <div class="input-group">
-                    <div>
-                        <label for="country">Country</label>
-                        <input type="text" id="country" placeholder="Country" value="${this.country || ''}">
-                    </div>
-                    <div>
-                        <label for="city">City</label>
-                        <input type="text" id="city" placeholder="City" value="${this.city || ''}">
-                    </div>
-                </div>
-                
-                <div class="form-section-title">Profile Info</div>
-                <div class="input-group">
-                    <div>
-                        <label for="username">Username</label>
-                        <input type="text" id="username" placeholder="Username" value="${this.username || ''}">
-                    </div>
-                    <div>
-                        <label for="description">Description</label>
-                        <input type="text" id="description" placeholder="Description" value="${this.description || ''}">
-                    </div>
-                </div>
-                
-                <div class="button-wrapper">
-                    <button type="submit">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    `;
+            `;
         }
     }
 }

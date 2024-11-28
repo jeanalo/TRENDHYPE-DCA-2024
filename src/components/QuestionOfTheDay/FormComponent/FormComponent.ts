@@ -1,5 +1,5 @@
 import { dispatch } from '../../../store/index';
-import { navigate } from '../../../store/actions';
+import { navigate, setMoodMsg } from '../../../store/actions';
 import { Screens } from '../../../types/store';
 
 export enum FormAttribute {
@@ -34,31 +34,68 @@ class FormComponent extends HTMLElement {
 
     attachEvents() {
         if (this.shadowRoot) {
-            const options = this.shadowRoot.querySelectorAll('.option');
+            // const options = this.shadowRoot.querySelectorAll('.option');
+            const neutral = this.shadowRoot.querySelector('#neutral');
+            neutral?.addEventListener('click', (e:Event)=> {
+                e.preventDefault();
+                const target = e.target as HTMLElement;
+                target.classList.add('selected')
+            })
+            const vibrant = this.shadowRoot.querySelector('#vibrant');
+            vibrant?.addEventListener('click', (e:Event)=> {
+                e.preventDefault();
+
+                const target = e.target as HTMLElement;
+                target.classList.add('selected')
+            })
+            const classic = this.shadowRoot.querySelector('#classic');
+            classic?.addEventListener('click', (e:Event)=> {
+                e.preventDefault();
+                const target = e.target as HTMLElement;
+                target.classList.add('selected')
+            })
+            const modern = this.shadowRoot.querySelector('#modern');
+            modern?.addEventListener('click', (e:Event)=> {
+                e.preventDefault();
+                const target = e.target as HTMLElement;
+                target.classList.add('selected')
+            })
+            const minimalist = this.shadowRoot.querySelector('#minimalist');
+            minimalist?.addEventListener('click', (e:Event)=> {
+                e.preventDefault();
+                const target = e.target as HTMLElement;
+                target.classList.add('selected')
+            })
+            const statement = this.shadowRoot.querySelector('#statement');
+            statement?.addEventListener('click', (e:Event)=> {
+                e.preventDefault();
+                const target = e.target as HTMLElement;
+                target.classList.add('selected')
+            })
+
+
             const form = this.shadowRoot.querySelector('.quiz');
 
-            options.forEach(option => {
-                option.addEventListener('click', (e: Event) => {
-                    e.preventDefault();
-                    const target = e.target as HTMLElement;
-                    console.log(`Selected option: ${target.textContent}`);
-                });
-            });
-
-            // Evento de submit en el formulario
+      // Evento de submit en el formulario
             form?.addEventListener('submit', (e: Event) => {
                 e.preventDefault();
-                alert('Form submitted! Processing result...');
-                this.navigateToDashboard(); // Llama a la función para navegar al dashboard
+                this.handleSubmit();
             });
         }
     }
 
-    // Método para navegar a la pantalla de DASHBOARD
-    navigateToDashboard() {
-        dispatch(navigate(Screens.DASHBOARD)); // Navegar a DASHBOARD
-    }
+    handleSubmit() {
+        const moodMessages = [
+            'Stay positive and stylish!',
+            'Today is your day to shine!',
+            'Fashion reflects your vibe!',
+            'Confidence is your best accessory!',
+        ];
+        const randomMsg = moodMessages[Math.floor(Math.random() * moodMessages.length)];
 
+        dispatch(setMoodMsg(randomMsg));
+        dispatch(navigate(Screens.DASHBOARD));
+    }
     render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
@@ -118,6 +155,10 @@ class FormComponent extends HTMLElement {
                     cursor: pointer;
                     font-size: 16px;
                 }
+
+                    .option.selected {
+                        background-color: #787878;
+                    }
 
                 .option span {
                     margin-left: 8px;
@@ -180,18 +221,18 @@ class FormComponent extends HTMLElement {
                 <form class="quiz">
                     <div class="question" id="question1">
                         <h2 class="question-title">${this.question1 || 'WHAT COLORS DO YOU PREFER TO WEAR TODAY?'}</h2>
-                        <button class="option">🖤<span> Neutral</span></button>
-                        <button class="option">🌈<span> Vibrant</span></button>
+                        <button id="neutral" class="option">🖤<span> Neutral</span></button>
+                        <button id="vibrant" class="option">🌈<span> Vibrant</span></button>
                     </div>
                     <div class="question" id="question2">
                         <h2 class="question-title">${this.question2 || 'WHAT TYPE OF CLOTHING INSPIRES YOU TODAY?'}</h2>
-                        <button class="option">👔 <span>Classic</span></button>
-                        <button class="option">👖 <span>Modern</span></button>
+                        <button id="classic" class="option">👔 <span>Classic</span></button>
+                        <button id="modern" class="option">👖 <span>Modern</span></button>
                     </div>
                     <div class="question" id="question3">
                         <h2 class="question-title">${this.question3 || 'WHAT ACCESSORY IS A MUST FOR YOUR LOOK TODAY?'}</h2>
-                        <button class="option">⌚ <span>Minimalist</span></button>
-                        <button class="option">💍 <span>Statement</span></button>
+                        <button id="minimalist" class="option">⌚ <span>Minimalist</span></button>
+                        <button id="statement" class="option">💍 <span>Statement</span></button>
                     </div>
                     <button type="submit" class="submit-button">
                         <img src="https://github.com/jeanalo/IMG-assets/blob/main/Button.png?raw=true" alt="">

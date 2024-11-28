@@ -1,11 +1,17 @@
+import { dispatch } from "../../store";
+import { navigate, setFriend } from "../../store/actions";
+import { Screens } from "../../types/store";
+
 export enum FriendCardAttribute {
     image = 'image',
     username = 'username',
+    userid = 'userid'
 }
 
 class FriendCard extends HTMLElement {
     image?: string;
     username?: string;
+    userid ? : string;
 
     constructor() {
         super();
@@ -23,6 +29,24 @@ class FriendCard extends HTMLElement {
 
     connectedCallback() {
         this.render();
+        this.addEventListeners()
+    }
+
+    addEventListeners() {
+        const friendCard = this.shadowRoot?.querySelector('.friend-card');
+    
+        friendCard?.addEventListener('click', () => {
+            if (!this.userid) {
+                console.error('El ID del usuario no está disponible.');
+                return;
+            }
+            console.log('Friend card with id:', this.userid, 'clicked');
+            
+            // Almacenar el userid en el estado global antes de navegar
+            dispatch(setFriend(this.userid));
+    
+            dispatch(navigate(Screens.FRIENDPROFILE));
+        });
     }
 
     render() {
@@ -62,7 +86,7 @@ class FriendCard extends HTMLElement {
                 </style>
 
                 <div class="friend-card">
-                    <img class="friend-image" src="${this.image || ''}" alt="Friend Image">
+                    <img class="friend-image" src="${this.image === "" ? 'https://i.pinimg.com/564x/ec/0f/a7/ec0fa7e18612c6a5239742cfd9dd6c46.jpg' : this.image }" alt="Friend Image">
                     <p class="friend-username">@${this.username || 'username'}</p>
                 </div>
             `;

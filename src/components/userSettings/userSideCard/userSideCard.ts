@@ -1,20 +1,20 @@
-import { appState, dispatch } from '../../../store/index';
-import { Actions, Screens } from '../../../types/store';
-import '../../logOutButton/logOutButton';
-import ProfileImage, { ProfileImageAttribute } from '../../ProfileImage/ProfileImage';
+import { appState, dispatch } from "../../../store";
+import { Actions, Screens } from "../../../types/store";
 
 export enum UserSideCardAttribute {
     name = 'name',
     username = 'username',
     description = 'description',
-    profileImage = 'profileImage',
+    profileimage = 'profileimage',
+    userid = 'userid',
 }
 
 class UserSideCard extends HTMLElement {
     name?: string;
     username?: string;
     description?: string;
-    profileImage?: string;
+    profileimage?: string;
+    userid?: string;
 
     constructor() {
         super();
@@ -25,8 +25,16 @@ class UserSideCard extends HTMLElement {
         return Object.keys(UserSideCardAttribute);
     }
 
-    attributeChangedCallback(name: UserSideCardAttribute, oldValue: string | null, newValue: string | null) {
-        (this as any)[name] = newValue;
+    attributeChangedCallback(propName: UserSideCardAttribute, oldValue: string | undefined, newValue: string | undefined) {
+        if (newValue !== oldValue) {
+            this[propName] = newValue;
+
+            if (propName === UserSideCardAttribute.userid) {
+                console.log(newValue);
+
+            }
+
+        }
         this.render();
     }
 
@@ -35,11 +43,137 @@ class UserSideCard extends HTMLElement {
         this.setupEventListeners();
     }
 
+    render() {
+        if (!this.shadowRoot) return;
+        console.log(this.profileimage);
+        
+        this.shadowRoot.innerHTML = `
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    font-family: Arial, sans-serif;
+                }
+
+                .side-card {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    height: 100vh;
+                    width: 250px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    background-color: #3d3a0b;
+                    color: #FCF3E4;
+                    padding-top: 20px;
+                    text-align: center;
+                    transition: width 0.3s ease;
+                }
+
+                .dashboard-logo {
+                    position: absolute;
+                    top: 20px;
+                    left: 20px;
+                    width: 80px;
+                    cursor: pointer;
+                }
+
+                .profile-image {
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    margin-top: 80px;
+                    margin-bottom: 10px;
+                    cursor: pointer;
+                }
+
+                .name {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    margin: 10px 0 5px;
+                }
+
+                .username {
+                    font-size: 0.8rem;
+                    color: #ccc;
+                    margin-bottom: 20px;
+                }
+
+                .description {
+                    font-size: 0.8rem;
+                    color: #ccc;
+                    margin-bottom: 20px;
+                    padding: 0 10px;
+                }
+
+                .menu-container {
+                    width: 100%;
+                    padding-left: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    margin-top: 30px;
+                }
+
+                .menu-item {
+                    cursor: pointer;
+                    color: #FCF3E4;
+                    font-size: 0.9rem;
+                    margin: 5px 0;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .menu-item.hidden {
+                    display: none; /* Oculta elementos con esta clase */
+                }
+
+                .logout-container {
+                    margin-top: 15px;
+                    width: 100%;
+                    display: flex;
+                    padding-left: 20px;
+                }
+
+                .hidden {
+                    display: none;
+                }
+
+            </style>
+            
+            <div class="side-card">
+                <img id="dashboardLogo" class="dashboard-logo" src="https://raw.githubusercontent.com/jeanalo/IMG-assets/refs/heads/main/TrendHypeLOGO.png" alt="TrendHype Logo">
+               <img 
+            id="profileImage" 
+            class="profile-image" 
+             src="${this.profileimage === "" ? 'https://i.pinimg.com/564x/ec/0f/a7/ec0fa7e18612c6a5239742cfd9dd6c46.jpg' : this.profileimage }" alt="User Profile Image"/>
+            <p class="name">${this.name }</p>
+            <p class="username">@${this.username }</p>
+            <p class="description">${this.description }</p>
+                <div class="menu-container">
+                    <div id="settingsLink" class="${appState.user !== this.userid ? 'hidden' : ''}">
+                        <span>⚙️ Settings</span>
+                    </div>
+                    <div id="favoritesLink" class="menu-item">
+                        <span>⭐ My Favorites</span>
+                    </div>
+                </div>
+                <div class="logout-container">
+                    <logout-button></logout-button>
+                </div>
+            </div>
+        `;
+    }
+
     setupEventListeners() {
         const dashboardLogo = this.shadowRoot?.querySelector('#dashboardLogo');
-        const profileImage = this.shadowRoot?.querySelector('profile-image');
         const favoritesLink = this.shadowRoot?.querySelector('#favoritesLink');
         const settingsLink = this.shadowRoot?.querySelector('#settingsLink');
+        const profileImage = this.shadowRoot?.querySelector('#profileImage');
 
         dashboardLogo?.addEventListener('click', () => {
             dispatch({ action: Actions.NAVIGATE, payload: Screens.DASHBOARD });
@@ -56,181 +190,6 @@ class UserSideCard extends HTMLElement {
         settingsLink?.addEventListener('click', () => {
             dispatch({ action: Actions.NAVIGATE, payload: Screens.USERSETTINGS });
         });
-    }
-
-    render() {
-        if (this.shadowRoot) {
-            this.shadowRoot.innerHTML = `
-                <style>
-                    * {
-                        margin: 0;
-                        padding: 0;
-                        box-sizing: border-box;
-                        font-family: Arial, sans-serif;
-                    }
-
-                    .side-card {
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        height: 100vh;
-                        width: 250px;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        background-color: #3d3a0b;
-                        padding-top: 6rem; /* Agrega más espacio arriba */
-                        color: #FCF3E4;
-                        text-align: center;
-                        transition: width 0.3s ease;
-                    }
-
-                    .dashboard-logo {
-                        position: absolute;
-                        top: 20px;
-                        left: 20px;
-                        width: 80px;
-                        cursor: pointer;
-                    }
-
-                    .name {
-                        font-size: 1.5rem;
-                        font-weight: bold;
-                        margin: 10px 0 5px;
-                    }
-
-                    .username {
-                        font-size: 0.8rem;
-                        color: #ccc;
-                        margin-bottom: 20px;
-                    }
-
-                    .description {
-                        font-size: 0.8rem;
-                        color: #ccc;
-                        margin-bottom: 20px;
-                        padding: 0 10px;
-                    }
-
-                    .menu-container {
-                        width: 100%;
-                        padding-left: 20px; /* Align menu to the left */
-                        display: flex;
-                        flex-direction: column;
-                        align-items: flex-start; /* Left align items */
-                        margin-top: 30px; /* Adds space to move menu lower */
-                    }
-
-                    .menu-item {
-                        cursor: pointer;
-                        color: #FCF3E4;
-                        font-size: 0.9rem;
-                        margin: 5px 0; /* Reduced spacing */
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                    }
-
-                    .logout-container {
-                        margin-top: 15px;
-                        width: 100%;
-                        display: flex;
-                        padding-left: 20px; /* Align button to the left */
-                    }
-
-                    /* Responsive styles */
-                    @media (max-width: 768px) {
-                        .side-card {
-                            position: relative;
-                            width: 100%;
-                            height: auto;
-                            padding-top: 10px;
-                            padding-bottom: 20px;
-                        }
-
-                        .dashboard-logo {
-                            width: 60px;
-                            top: 10px;
-                            left: 10px;
-                        }
-
-                        .name {
-                            font-size: 1.2rem;
-                        }
-
-                        .username, .description, .menu-item {
-                            font-size: 0.75rem;
-                        }
-
-                        .menu-container {
-                            padding-left: 10px;
-                            margin-top: 10px;
-                        }
-
-                        .logout-container {
-                            padding-left: 10px;
-                        }
-                    }
-
-                    @media (max-width: 480px) {
-                        .side-card {
-                            width: 100%;
-                            padding: 10px;
-                        }
-
-                        .dashboard-logo {
-                            width: 50px;
-                            top: 5px;
-                            left: 5px;
-                        }
-
-                        .name {
-                            font-size: 1rem;
-                        }
-
-                        .username, .description {
-                            font-size: 0.7rem;
-                        }
-
-                        .menu-item {
-                            font-size: 0.8rem;
-                            gap: 5px;
-                        }
-
-                        .logout-container {
-                            padding-left: 5px;
-                        }
-                    }
-                </style>
-                
-                <div class="side-card">
-                    <img id="dashboardLogo" class="dashboard-logo" src="https://raw.githubusercontent.com/jeanalo/IMG-assets/refs/heads/main/TrendHypeLOGO.png" alt="TrendHype Logo">
-                    
-                    <!-- Usando el componente de imagen reutilizable -->
-                    <profile-image 
-                        ${ProfileImageAttribute.src}="${this.profileImage || 'https://i.pinimg.com/564x/ec/0f/a7/ec0fa7e18612c6a5239742cfd9dd6c46.jpg'}"
-                        ${ProfileImageAttribute.alt}="User Profile Image">
-                    </profile-image>
-                    
-                    <p class="name">${this.name || 'Nombre no disponible'}</p>
-                    <p class="username">${this.username || ''}</p>
-                    <p class="description">${this.description || ''}</p>
-
-                    <div class="menu-container">
-                        <div id="settingsLink" class="menu-item">
-                            <span>⚙️ Settings</span>
-                        </div>
-                        <div id="favoritesLink" class="menu-item">
-                            <span>⭐ My Favorites</span>
-                        </div>
-                    </div>
-
-                    <div class="logout-container">
-                        <logout-button></logout-button>
-                    </div>
-                </div>
-            `;
-        }
     }
 }
 
