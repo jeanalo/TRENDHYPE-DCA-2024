@@ -1,6 +1,7 @@
 import { appState, dispatch } from "../../store";
 import { navigate, setUserCredentials } from "../../store/actions";
 import { Screens } from "../../types/store";
+import { logOut } from "../../utils/firebase";
 
 class LogoutButton extends HTMLElement {
     constructor() {
@@ -13,13 +14,8 @@ class LogoutButton extends HTMLElement {
     }
 
     logOutUser() {
-        localStorage.clear();  // Limpia el almacenamiento local
-        sessionStorage.clear(); // Limpia el almacenamiento de sesión
-
-        dispatch(setUserCredentials('')); // Limpia las credenciales de usuario
-        dispatch(navigate(Screens.LOGIN)); // Navega a la pantalla de registro
-
-        location.reload(); 
+        logOut()
+        dispatch(navigate(Screens.LOGIN))
     }
 
     render() {

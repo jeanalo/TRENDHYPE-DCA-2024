@@ -6,7 +6,7 @@ import { dispatch, appState } from '../../../store/index'; // Importamos appStat
 const postInfo = {
     image: '',
     description: '',
-    userID: '' // Agregamos el userID para almacenarlo en Firestore
+    userID: '', // Agregamos el userID para almacenarlo en Firestore    
 };
 
 export enum PostAttribute {
@@ -19,6 +19,7 @@ export enum PostAttribute {
 class AppPost extends HTMLElement {
     imageFile?: File;
     description?: string;
+    likes? : number;
 
     constructor() {
         super();
