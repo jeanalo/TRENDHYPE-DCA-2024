@@ -1,5 +1,5 @@
 import { addPosts } from '../../utils/firebase';
-import { fetchPostsAction, navigate } from '../../store/actions';
+import { getPublications, navigate } from '../../store/actions';
 import { Screens } from '../../types/store';
 import { dispatch } from '../../store/index';
 import AppPost, { PostAttribute } from '../../components/Post/post-form/post-form';
@@ -14,13 +14,14 @@ class CreatePostScreen extends HTMLElement {
         this.render();
     }
 
-    async handleCreatePost(postData: { title: string; image: string; description: string }) {
+
+    async handleCreatePost(postData: { title: string; image: string; description: string;}) {
         try {
             // Agregar la publicación a Firebase
             await addPosts(postData);
 
             // Actualizar las publicaciones en appState para reflejar la nueva lista
-            await dispatch(await fetchPostsAction()); // Despachar la acción para actualizar el estado global
+            dispatch(await getPublications()); // Despachar la acción para actualizar el estado global
 
             // Redirigir a la pantalla de User Feed después de crear la publicación
             dispatch(navigate(Screens.USERPROFILE));
@@ -78,7 +79,7 @@ class CreatePostScreen extends HTMLElement {
                         }
                     }
                 </style>
-
+                <img id="logo" src="https://github.com/jeanalo/IMG-assets/blob/main/TrendHypeLOGO.png?raw=true" alt="alt='TrendHypeLogo'"/>
                 <div id="create-post-container">
                     <div class="image-container">
                         <img src="https://i.pinimg.com/736x/06/6d/58/066d58da1ab80679e5cfe40da7f514a6.jpg" alt="Post Image">
@@ -88,9 +89,16 @@ class CreatePostScreen extends HTMLElement {
                 </div>
             `;
 
+            // Logo click para volver al dashboard
+            const logo = this.shadowRoot.querySelector('#logo');
+
+            logo?.addEventListener('click', () => {
+                dispatch(navigate(Screens.DASHBOARD))
+            })
+
             const appPostComponent = new AppPost();
             appPostComponent.setAttribute(PostAttribute.title, 'New Post');
-            appPostComponent.setAttribute(PostAttribute.image, '');
+            appPostComponent.setAttribute(PostAttribute.image, ''); ``
             appPostComponent.setAttribute(PostAttribute.description, '');
             appPostComponent.setAttribute(PostAttribute.submitButton, 'Publish');
 

@@ -1,5 +1,9 @@
-import { getDashboardSections } from '../../utils/firebase'; // Asegúrate de la ruta correcta
 import { DashboardSectionItem } from '../../types/dashboardforyoutypes'; // Importa el tipo
+import { appState, dispatch } from '../../store';
+import MyCard, { Attribute } from '../../components/Card/Card';
+import { getPublications } from '../../store/actions';
+import Aside, { AsideAttribute } from '../../components/Aside/Aside';
+import { getUserByUID } from '../../utils/firebase';
 
 class Dashboard extends HTMLElement {
     constructor() {
@@ -8,11 +12,87 @@ class Dashboard extends HTMLElement {
     }
 
     async connectedCallback() {
-        await this.render();
-        console.log('Dashboard screen loaded');
+        this.render();
+        this.getUserData();
+
+        if (appState.publications.length === 0) {
+            const posts = await getPublications();
+            dispatch(posts);
+            this.renderPosts(appState.publications);
+        } else {
+            this.renderPosts(appState.publications);
+        }
     }
 
-    async render() {
+    async getUserData() {
+
+        const userID = appState.user; // Obtener el UID del amigo desde el estado global
+
+        if (!userID) {
+            console.error('No se proporcionó el UID del amigo.');
+            return;
+        }
+
+        const user = await getUserByUID(userID);
+
+        if (user) {
+            console.log(user);
+
+            const aside = this.ownerDocument.createElement('aside-component') as Aside;
+            aside.setAttribute(AsideAttribute.profileimage, user.profileImage);
+            aside.setAttribute(AsideAttribute.name, `${user.firstname} ${user.lastname}`);
+            aside.setAttribute(AsideAttribute.description, user.description);
+
+            const mainContent = this.shadowRoot?.querySelector('.content');
+            mainContent?.appendChild(aside);
+
+            this.addSearchListener();
+
+        }
+
+    }
+
+    addSearchListener() {
+        const aside = this.shadowRoot?.querySelector('aside-component');
+        aside?.addEventListener('search', (event) => {
+            const searchEvent = event as CustomEvent; // Declarar explícitamente como CustomEvent
+            const searchTerm = searchEvent.detail.searchTerm;
+            const filteredPosts = appState.publications.filter((post: { description: string }) =>
+                post.description.toLowerCase().includes(searchTerm)
+            );
+            this.renderPosts(filteredPosts);
+        });
+    }
+
+    renderPosts(posts: DashboardSectionItem[]) {
+        const postsContainer = this.shadowRoot?.querySelector('.user-feed');
+        if (postsContainer) {
+            postsContainer.innerHTML = ""; // Limpiar publicaciones actuales
+
+            if (posts.length === 0) {
+                // Mostrar mensaje si no hay posts
+                const noPostsMessage = this.ownerDocument.createElement('p');
+                noPostsMessage.textContent = "No posts found";
+                noPostsMessage.style.textAlign = "center";
+                noPostsMessage.style.color = "#BCB3AA";
+                postsContainer.appendChild(noPostsMessage);
+                return;
+            }
+
+            // Renderizar posts si existen
+            posts.forEach((publication) => {
+                const card = this.ownerDocument.createElement('my-card') as MyCard;
+                card.setAttribute(Attribute.image, publication.image);
+                card.setAttribute(Attribute.description, publication.description);
+                card.setAttribute(Attribute.likes, publication.likes?.toString());
+                card.setAttribute(Attribute.postid, publication.id);
+                card.setAttribute(Attribute.userid, publication.userID);
+                postsContainer.appendChild(card);
+            });
+        }
+    }
+
+    render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
                 <link rel="stylesheet" href="../src/screens/dashboardForYou/dashboardForYou.css">
@@ -24,38 +104,13 @@ class Dashboard extends HTMLElement {
                             <section class="trending-users-banner">
                                 <h2>TRENDING USERS</h2>
                             </section>
-                            <section class="trending-users-contianer">
-                    <trending-user name="LAURA" age="30"
-                        desc="I'm Laura, a fashion lover with an eye for urban and chic. My style is inspired by streetwear and contemporary trends. This season, I'm exploring layering and fabric mixing to create outfits that are both functional and stylish."></trending-user>
-                    <trending-user name="MARIETA" age="30"
-                        desc="Hi, I'm Marieta, a fashion enthusiast with a bold edge. This season, I'm all about vibrant colors and leather pieces that elevate any outfit. I love mixing classic with modern."></trending-user>
-                    <trending-user name="DANIEL" age="30"
-                        desc="I'm Daniel, a fashion lover with an eye for urban and chic. My style is inspired by streetwear and contemporary trends. This season, I'm exploring layering and fabric mixing to create outfits that are both functional and stylish."></trending-user>
-                </section>
-                            <section class="user-feed">
-                                
-                                <my-card></my-card>
-                                <my-card></my-card>
-                                <my-card></my-card>
-                                <my-card></my-card>
-                                <my-card></my-card>
-                                <my-card></my-card>
-                            </section>
+                            <section class="user-feed"></section>
                         </main>
-                        <aside-component></aside-component>
+                        
                     </div>
                 </div>
             `;
 
-            const data: DashboardSectionItem[] = await getDashboardSections();
-            const cards = this.shadowRoot.querySelectorAll('section.user-feed my-card');
-
-            data.slice(0, cards.length).forEach((item, index) => {
-                const card = cards[index] as any;
-                if (card && typeof card.updateContent === 'function') {
-                    card.updateContent(item.img, item.description);
-                }
-            });
         }
     }
 }
