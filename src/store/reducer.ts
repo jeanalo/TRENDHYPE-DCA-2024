@@ -29,6 +29,16 @@ export const reducer = (currentAction: any, currentState: any) => {
                 ...currentState,
                 user: { ...currentState.user, ...payload },
             };
+			case Actions.SETFRIEND:
+            return {
+                ...currentState,
+                friend : payload,
+            };
+			case Actions.SETMOODMSG:
+            return {
+                ...currentState,
+                moodmsg : payload,
+            };
 
 		default:
 			return currentState;

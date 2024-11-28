@@ -1,3 +1,4 @@
+import { DashboardSectionItem } from '../types/dashboardforyoutypes';
 import { Actions, Screens } from '../types/store';
 import { getPosts } from '../utils/firebase';
 
@@ -8,23 +9,13 @@ export const navigate = (screen: Screens) => {
 	};
 };
 
-export const fetchPostsAction = async () => {
-    try {
-        const posts = await getPosts();
-
-        return {
-            action: Actions.GETPOSTS,
-            payload: posts, // Asegúrate de que `posts` es un array sin duplicados
-        };
-    } catch (error) {
-        console.error('Error fetching posts:', error);
-        return {
-            action: Actions.GETPOSTS,
-            payload: [], // En caso de error, retorna un array vacío
-        };
-    }
+export const getPublications = async () => {
+	const posts = await getPosts();
+	return {
+		action: Actions.GETPOSTS,
+		payload: posts as DashboardSectionItem[],
+	};
 };
-
 
 
 export const setUserCredentials = (user: string) => {
@@ -33,3 +24,17 @@ export const setUserCredentials = (user: string) => {
 		payload:user,
 	};
 };
+
+export const setFriend = (id : string) => {
+	return {
+		action : Actions.SETFRIEND,
+		payload : id,
+	}
+}
+export const setMoodMsg = (msg : string) => {
+	return {
+		action : Actions.SETMOODMSG,
+		payload : msg,
+	}
+}
+

@@ -1,36 +1,53 @@
 import { reducer } from './reducer';
 import Storage from '../utils/storage';
-import { AppState, Observer } from '../types/store';
+import { AppState, Observer, PersistanceKeys } from '../types/store';
 import { Screens } from '../types/store';
+import { onAuthStateChanged } from 'firebase/auth';
+import {getFirebaseInstance} from '../utils/firebase'
+import { navigate, setUserCredentials } from './actions';
+
+const onAuth = async () => {
+	const { auth } = await getFirebaseInstance();
+	onAuthStateChanged(auth, (user: any) => {
+		if (user) {
+			user.uid !== null ? dispatch(setUserCredentials(user.uid)) : ''; // Guarda el id del usuario
+			dispatch(navigate(Screens.DASHBOARD)); // Navega al dashboard
+		} else if (appState.screen === Screens.DASHBOARD) {
+			dispatch(navigate(Screens.LOGIN)); // Navega a login si no hay usuario autenticado
+		}
+	});
+};
+
+onAuth()
 
 const initialState: AppState = {
     screen: Screens.LOGIN,
     publications: [],
-    user: "USER_ID_OBTENIDO_DEL_LOGIN",
+    user: '',
+	friend : '',
+	moodmsg : ''
 };
 
 
-export let appState = Storage.get('STORE', initialState);
+export let appState = initialState;
 
 let observers: Observer[] = [];
 
-const persistStore = (state: any) => {
-    Storage.set('STORE', state);
+const persistStore = (state: AppState) => {
+	Storage.set(PersistanceKeys.STORE, JSON.stringify(state));
+
 };
 
 export const dispatch = (action: any) => {
-    const clone = JSON.parse(JSON.stringify(appState));
-    const newState = reducer(action, clone);
+	const clone = JSON.parse(JSON.stringify(appState)); // Clona el estado actual
+	const newState = reducer(action, clone); // Genera el nuevo estado usando el reducer
+	console.log(`estado actualizado desde ${action.action} y ${action.payload}`);
+	appState = newState;
 
-    // Verificar si el estado realmente cambió antes de actualizar
-    if (JSON.stringify(appState) !== JSON.stringify(newState)) {
-        appState = newState;
-        persistStore(newState);
-        console.log('Nuevo estado después del dispatch:', appState);
 
-        // Llamar a render solo si hay un cambio real
-        observers.forEach((o: any) => o.render());
-    }
+	persistStore(newState);
+	// Notifica a los observadores para que se actualicen
+	observers.forEach((o: any) => o.render());
 };
 
 
