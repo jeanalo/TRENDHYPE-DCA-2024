@@ -1,16 +1,93 @@
-import { dispatch, appState } from "../../store/index";
-import { Screens } from "../../types/store";
+import MyCard, { Attribute } from '../../components/Card/Card';
 import UserSideCard, { UserSideCardAttribute } from '../../components/userSettings/userSideCard/userSideCard';
+import { appState } from '../../store';
+import { getSavedPosts, getUserByUID } from '../../utils/firebase';
 
 class favoritePosts extends HTMLElement {
+    userid ? : string;
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
     }
 
-    async connectedCallback() {
+    
+    static get observedAttributes() {
+        return ["userid"];
+    }
+
+    attributeChangedCallback(name: string, oldValue: string | undefined, newValue: string | undefined) {
+        if (name === "userid" && newValue !== oldValue) {
+            this.userid = newValue;
+            this.renderSavedPosts();
+        }
+    }
+
+
+    connectedCallback() {
         console.log('FavoritePosts component connected');
         this.render();
+        this.getUserData();
+    }
+
+    async getUserData() {
+
+        const userID = appState.user
+
+        if (!userID) {
+            console.error('No se proporcionó el UID del amigo.');
+            return;
+        }
+
+        const user = await getUserByUID(userID);
+
+        if (user) {
+            console.log(user);
+            
+            const userSideCard = new UserSideCard();
+            userSideCard.setAttribute(UserSideCardAttribute.name, `${user.firstname} ${user.lastname}`);
+            userSideCard.setAttribute(UserSideCardAttribute.username, user.username);
+            userSideCard.setAttribute(UserSideCardAttribute.profileimage, user.profileImage );
+            userSideCard.setAttribute(UserSideCardAttribute.description, user.description);
+            userSideCard.setAttribute(UserSideCardAttribute.userid, this.userid!)
+    
+            const sidebar = this.shadowRoot?.querySelector('.sidebar');
+            sidebar?.appendChild(userSideCard);
+        }
+        
+    }
+    async renderSavedPosts() {
+        if (!this.userid) {
+            console.log('No userid passed');
+            return
+        }
+
+        const posts = await getSavedPosts(this.userid);
+        const postContainer = this.shadowRoot?.querySelector('#posts-container')
+
+        if (postContainer) {
+            postContainer.innerHTML = "";
+        }
+
+        if (posts.length === 0) {
+            const addPostMsg = this.ownerDocument.createElement('p')
+            addPostMsg.innerHTML = 'Add to favorite any post'
+            postContainer?.appendChild(addPostMsg);
+        }
+
+        posts.forEach((post: { id: string; image?: string; description?: string; likes?: number }) => {
+            const postCard = this.ownerDocument.createElement('my-card') as MyCard;
+        
+            // Verifica y asigna atributos solo si están presentes
+            if (post.image) postCard.setAttribute(Attribute.image, post.image);
+            if (post.description) postCard.setAttribute(Attribute.description, post.description);
+            if (post.likes !== undefined) postCard.setAttribute(Attribute.likes, post.likes.toString());
+            postCard.setAttribute(Attribute.postid, post.id);
+            postCard.setAttribute(Attribute.userid, this.userid!);
+        
+            postContainer?.appendChild(postCard);
+        });
+
     }
 
     render() {
@@ -67,7 +144,7 @@ class favoritePosts extends HTMLElement {
                         flex-wrap: wrap;
                         justify-content: flex-start;
                         gap: 16px;
-                        padding-left: 10px;
+                        padding-left: 300px;
                     }
                 </style>
                 
@@ -75,24 +152,14 @@ class favoritePosts extends HTMLElement {
                     <div class="sidebar"></div>
                     <div class="main-content">
                         <div class="banner">Favorites</div>
-                        <section id="posts-container"></section>
+                        <section id="posts-container">
+                        
+                        
+                        </section>
                     </div>
                 </div>
             `;
 
-            // Agregar el componente UserSideCard a la barra lateral
-            const userSideCardComponent = new UserSideCard();
-            userSideCardComponent.setAttribute(UserSideCardAttribute.name, 'Jean Alomia');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.username, '@Jeanalomia');
-            userSideCardComponent.setAttribute(UserSideCardAttribute.description, 'Chasing dreams and making memories');
-
-            const sidebar = this.shadowRoot.querySelector('.sidebar');
-            if (sidebar) {
-                sidebar.appendChild(userSideCardComponent);
-                console.log('UserSideCard component appended to sidebar');
-            } else {
-                console.error('Sidebar not found');
-            }
         } else {
             console.error('Shadow root not found');
         }
