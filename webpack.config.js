@@ -21,7 +21,7 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: 'images/[name].[ext]',
-                            publicPath: '/', // Ajusta la ruta pública según tu estructura
+                            publicPath: '/TRENDHYPE-DCA-2024/dist/',
                         },
                     },
                 ],
@@ -34,6 +34,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.js',
-        publicPath: '/dist/',
-    },
+        publicPath: '/TRENDHYPE-DCA-2024/dist/', // Ajusta según el nombre del repositorio
+      },
+      
 };
