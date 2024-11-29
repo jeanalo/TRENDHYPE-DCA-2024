@@ -55,7 +55,8 @@ class DashboardBanner extends HTMLElement {
                     background: linear-gradient(125deg, rgba(94, 93, 69, 1) 0%, rgba(69, 68, 42, 1) 33%, rgba(50, 49, 23, 1) 100%);
                     border-radius: 46px;
                     border: 1px solid #42411F;
-                    height: 20rem;
+                    height: 20.35rem;
+                    width: 95%;
                 }
 
                 #daily-tracker {
@@ -82,7 +83,7 @@ class DashboardBanner extends HTMLElement {
 
                 .dashboard-banner h2 {
                     text-align: start;
-                    font-size: 42px;
+                    font-size: 35px;
                 }
 
                 .dashboard-banner a {
@@ -97,11 +98,11 @@ class DashboardBanner extends HTMLElement {
 
                 img {
                     position: relative;
-                    bottom: 21.8rem; /* my favourite CSS directive ;) */
-                    right: -18.5rem;
+                    bottom: 20.8rem; /* my favourite CSS directive ;) */
+                    right: -14.9rem;
                     background-size: cover;
-                    width: 24.8rem;
-                    height: 22.35rem;
+                    width: 22.8rem;
+                    height: 22.5rem;
                 }
 
                 /* Ajustes solo para pantallas menores a 768px */

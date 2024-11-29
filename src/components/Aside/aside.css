@@ -11,11 +11,11 @@ aside {
     justify-content: space-between;
     gap: 30px;
     padding: 20px;
-    height: 100vh;
+    height: 88vh;
     width: 100%;
     background-color: #343109;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow-y: none;
 }
 
 aside p {

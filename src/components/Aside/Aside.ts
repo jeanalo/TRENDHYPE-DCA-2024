@@ -80,7 +80,7 @@ class Aside extends HTMLElement {
     render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
-                <link rel="stylesheet" href="../src/components/Aside/aside.css">
+                
                 <aside>
                     <p> QUICK SEARCH </p>
                     <div class="InputContainer">
@@ -105,22 +105,153 @@ class Aside extends HTMLElement {
                             <p class="quote">${this.description}</p>
                         </div>
                          <div class="leads">
-                            <div class="lead">
-                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15 15C13.0406 15 11.3633 14.3023 9.96797 12.907C8.57266 11.5117 7.875 9.83438 7.875 7.875C7.875 5.91562 8.57266 4.23828 9.96797 2.84297C11.3633 1.44766 13.0406 0.75 15 0.75C16.9594 0.75 18.6367 1.44766 20.032 2.84297C21.4273 4.23828 22.125 5.91562 22.125 7.875C22.125 9.83438 21.4273 11.5117 20.032 12.907C18.6367 14.3023 16.9594 15 15 15ZM0.75 29.25V24.2625C0.75 23.2531 1.01006 22.3257 1.53019 21.4802C2.05031 20.6347 2.74025 19.9887 3.6 19.5422C5.44062 18.6219 7.31094 17.9319 9.21094 17.4724C11.1109 17.0128 13.0406 16.7824 15 16.7812C16.9594 16.7801 18.8891 17.0104 20.7891 17.4724C22.6891 17.9343 24.5594 18.6243 26.4 19.5422C27.2609 19.9875 27.9515 20.6335 28.4716 21.4802C28.9917 22.3269 29.2512 23.2543 29.25 24.2625V29.25H0.75Z" fill="#E2D54B"/>
-                                </svg>
-                                <p> 500k </p>
-                            </div>
-                            <div class="lead">
-                                <svg width="34" height="31" viewBox="0 0 34 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16.5625 30.3922L14.1609 28.2059C5.63125 20.4712 0 15.3534 0 9.10937C0 3.99156 4.00813 0 9.10938 0C11.9913 0 14.7572 1.34156 16.5625 3.445C18.3678 1.34156 21.1337 0 24.0156 0C29.1169 0 33.125 3.99156 33.125 9.10937C33.125 15.3534 27.4937 20.4712 18.9641 28.2059L16.5625 30.3922Z" fill="#E2D54B"/>
-                                </svg>
-                                <p> 2M </p>
-                            </div>
+                            
+
                         </div>
                     </section>
                     </section>
                 </aside>
+                <style>
+                /* CSS original para el aside */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    height: 81vh;
+    width: 100%;
+    background-color: #343109;
+    box-sizing: border-box;
+    overflow-y: none;
+}
+
+aside p {
+    font-weight: 600;
+    font-size: 20px;
+    align-self: flex-start;
+}
+
+.InputContainer {
+    height: 45px;
+    max-width: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FCF3E4;
+    border-radius: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0 18px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+}
+
+.input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background-color: #FCF3E4;
+    color: #BCB3AA;
+}
+
+.input::placeholder {
+    color: #BCB3AA;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.labelforsearch {
+    cursor: text;
+    padding: 0px 12px;
+}
+
+.searchIcon {
+    width: 13px;
+}
+
+.todays-mood {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 370px;
+    height: 160px;
+    border-radius: 30px;
+    padding-top: 12px;
+    background-color: #9A5311;
+}
+
+.todays-mood h3 {
+    font-family: "Times New Roman", serif;
+    font-weight: 400;
+    font-size: 2rem;
+    font-style: italic;
+    color: #E2D54B;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    border-radius: 30px;
+    background-color: #B2D1EE;
+}
+
+.profile .caption {
+    padding: 40px 0 0 30px;
+    align-self: flex-start;
+    color: #9A5311;
+}
+
+.profile .profile-info .name {
+    font-size: 1.5rem;
+    color: #9A5311;
+}
+
+.profile .profile-info .quote {
+    font-weight: 200;
+    color: #9A5311;
+    font-size: 1rem;
+}
+
+.profile .leads {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 30px;
+    width: 100%;
+    border-radius: 0 0 30px 30px;
+    padding: 30px 0;
+    background-color: #9A5311;
+    height: 5%;
+}
+
+
+img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Ajustes solo para pantallas menores a 768px */
+@media screen and (max-width: 768px) {
+    aside {
+        display: none; /* Oculta completamente el aside */
+    }
+}
+
+                </style>
             `;
         }
     }
