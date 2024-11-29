@@ -21,7 +21,7 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: 'images/[name].[ext]',
-                            publicPath: '/TRENDHYPE-DCA-2024/dist/',
+                            publicPath: '/', 
                         },
                     },
                 ],
