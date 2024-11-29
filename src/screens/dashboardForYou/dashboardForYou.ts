@@ -95,20 +95,97 @@ class Dashboard extends HTMLElement {
     render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
-                <link rel="stylesheet" href="../src/screens/dashboardForYou/dashboardForYou.css">
-                <div id="dashboardWrapper">
-                    <header-component></header-component>
-                    <div class="content">
-                        <main>
-                            <dashboard-banner></dashboard-banner>
-                            <section class="trending-users-banner">
-                                <h2>TRENDING USERS</h2>
-                            </section>
-                            <section class="user-feed"></section>
-                        </main>
-                        
+                    <div id="dashboardWrapper">
+                        <header-component></header-component>
+                        <div class="content">
+                            <main>
+                                <dashboard-banner></dashboard-banner>
+                                <section class="trending-users-banner">
+                                    <h2>TRENDING USERS</h2>
+                                </section>
+                                <section class="user-feed"></section>
+                            </main>
+                            
+                        </div>
                     </div>
-                </div>
+            <style>
+                * {
+                    padding: 0;
+                    margin: 0;
+                    box-sizing: border-box;
+                }
+
+                #dashboardWrapper {
+                    background-color: #232106;
+                    height: 100vh; /* Mantiene la altura completa en pantallas grandes */
+                    overflow: hidden; /* Evita que el contenedor principal haga scroll */
+                }
+
+                .content {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                }
+
+                main {
+                    padding: 40px 40px 60px 60px;
+                    flex: 1;
+                    overflow-y: auto; /* Permite scroll solo en main */
+                    height: calc(100vh - 78px); /* Altura ajustada para la pantalla completa menos el header */
+                }
+
+                .trending-users-banner {
+                    margin: 22px 0;
+                    border-radius: 20px;
+                    background-color: #E2D34B;
+                }
+
+                .trending-users-banner h2 {
+                    padding: 20px 0;
+                    color: #9A5311;
+                }
+
+                .trending-users-contianer {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 30px;
+                }
+
+                .user-feed {
+                    margin-top: 22px;
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 30px;
+                }
+
+                /* Ajustes solo para pantallas menores a 768px */
+                @media screen and (max-width: 768px) {
+                    #dashboardWrapper {
+                        height: 100vh; /* Usa el 100% de la altura de la pantalla */
+                        overflow: hidden; /* Evita el scroll en el contenedor principal */
+                    }
+
+                    main {
+                        padding: 20px;
+                        width: 100%;
+                        height: calc(100vh - 78px); /* Altura ajustada para la pantalla completa menos el header */
+                        overflow-y:auto /* Permite scroll solo en main en pantallas pequeñas */
+                    }
+
+                    .trending-users-contianer,
+                    .user-feed {
+                        grid-template-columns: 1fr; /* Cambia a una sola columna en pantallas pequeñas */
+                        gap: 15px;
+                    }
+
+                    aside {
+                        overflow: hidden; /* Asegura que el aside no tenga scroll */
+                        height: auto; /* Ajusta la altura del aside automáticamente */
+                    }
+                }
+
+        
+             </style>
             `;
 
         }
