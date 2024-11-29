@@ -1,4 +1,3 @@
-/* Estilos para el contenedor principal de las tarjetas */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* Tres columnas uniformes */
@@ -21,10 +20,10 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Contenedor de imagen ocupando el 60% de la altura de la tarjeta */
+/* Contenedor de imagen ocupando el 80% de la altura de la tarjeta */
 .card-image-container {
     width: 100%;
-    height: 60%;
+    height: 70%; /* Ahora ocupa el 80% de la tarjeta */
     overflow: hidden;
     position: relative;
     background-color: #ddd;
@@ -33,8 +32,8 @@
 .card-image-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center;
+    object-fit: cover; /* Asegura que la imagen se ajuste sin deformarse */
+    object-position: center; /* Centra la imagen dentro del contenedor */
 }
 
 /* Posicionamiento absoluto para el botón y los iconos */
@@ -72,11 +71,11 @@
 .icons-container svg {
     cursor: pointer;
     fill: #FCF3E4;
-    width: 18px;
-    height: 18px;
+    width: 24px; /* Aumenta el ancho de los iconos */
+    height: 24px; /* Aumenta la altura de los iconos */
 }
 
-/* Contenedor de texto ocupando el 40% restante */
+/* Contenedor de texto ocupando el 20% restante */
 .card .info {
     padding: 10px;
     font-size: 10px;
@@ -84,7 +83,7 @@
     background-color: #FCF3E4;
     border-radius: 0 0 20px 20px;
     text-align: center;
-    height: 40%;
+    height: 30%; /* Ahora ocupa solo el 20% de la tarjeta */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -104,17 +103,23 @@
 
     .card {
         width: 80%; /* Disminuye el ancho al 80% del contenedor */
-        height: 150vw; /* Aumenta la altura para una forma más vertical */
+        height: auto; /* Permite que la altura sea flexible */
         max-height: 400px; /* Ajuste máximo para evitar que sea demasiado larga */
         margin: 0 auto; /* Centra la tarjeta dentro del contenedor */
     }
 
     /* Ajuste para la imagen dentro de la tarjeta */
     .card-image-container {
-        height: 60%; /* Ajusta la altura de la imagen en relación al nuevo diseño */
+        height: 80%; /* Ahora ocupa el 80% incluso en pantallas pequeñas */
     }
 
     .card .info {
-        height: 40%; /* Ajusta el contenedor de texto para llenar el resto del espacio */
+        height: 20%; /* La información sigue ocupando solo el 20% */
+    }
+
+    /* Aumenta el tamaño de los iconos en pantallas pequeñas */
+    .icons-container svg {
+        width: 28px; /* Iconos más grandes en pantallas pequeñas */
+        height: 28px;
     }
 }
