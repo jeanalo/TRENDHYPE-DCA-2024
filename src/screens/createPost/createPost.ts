@@ -14,19 +14,18 @@ class CreatePostScreen extends HTMLElement {
         this.render();
     }
 
-
-    async handleCreatePost(postData: { title: string; image: string; description: string;}) {
+    async handleCreatePost(postData: { title: string; image: string; description: string; }) {
         try {
-            // Agregar la publicación a Firebase
+            // Add the post to Firebase
             await addPosts(postData);
 
-            // Actualizar las publicaciones en appState para reflejar la nueva lista
-            dispatch(await getPublications()); // Despachar la acción para actualizar el estado global
+            // Update appState to reflect the new list
+            dispatch(await getPublications());
 
-            // Redirigir a la pantalla de User Feed después de crear la publicación
+            // Redirect to the user profile screen
             dispatch(navigate(Screens.USERPROFILE));
         } catch (error) {
-            console.error("Error al crear la publicación:", error);
+            console.error("Error creating post:", error);
         }
     }
 
@@ -43,6 +42,7 @@ class CreatePostScreen extends HTMLElement {
 
                     #create-post-container {
                         display: flex;
+                        flex-direction: row;
                         width: 100vw;
                         height: 100vh;
                         background-color: #232106;
@@ -50,7 +50,8 @@ class CreatePostScreen extends HTMLElement {
                     }
 
                     .image-container {
-                        flex: 0 0 40%;
+                        flex: 1;
+                        max-width: 40%;
                         height: 100%;
                         display: flex;
                         align-items: center;
@@ -64,22 +65,48 @@ class CreatePostScreen extends HTMLElement {
                     }
 
                     .form-container {
-                        flex: 0 0 60%;
+                        flex: 1;
+                        max-width: 60%;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        height: 100%;
-                        padding: 5px;
+                        padding: 20px;
+                        border-radius: 10px;
                     }
 
                     @media (max-width: 768px) {
                         #create-post-container {
                             flex-direction: column;
-                            height: auto;
+                        }
+
+                        .image-container {
+                            max-width: 100%;
+                            height: 200px;
+                        }
+
+                        .image-container img {
+                            width: 100%;
+                            height: 100%;
+                        }
+
+                        .form-container {
+                            max-width: 100%;
+                            padding: 10px;
+                        }
+                    }
+
+                    @media (max-width: 480px) {
+                        .form-container {
+                            padding: 5px;
+                        }
+
+                        .image-container {
+                            height: 150px;
                         }
                     }
                 </style>
-                <img id="logo" src="https://github.com/jeanalo/IMG-assets/blob/main/TrendHypeLOGO.png?raw=true" alt="alt='TrendHypeLogo'"/>
+
+                <img id="logo" src="https://github.com/jeanalo/IMG-assets/blob/main/TrendHypeLOGO.png?raw=true" alt="TrendHypeLogo" />
                 <div id="create-post-container">
                     <div class="image-container">
                         <img src="https://i.pinimg.com/736x/06/6d/58/066d58da1ab80679e5cfe40da7f514a6.jpg" alt="Post Image">
@@ -89,23 +116,22 @@ class CreatePostScreen extends HTMLElement {
                 </div>
             `;
 
-            // Logo click para volver al dashboard
+            // Add event listener for logo to navigate to dashboard
             const logo = this.shadowRoot.querySelector('#logo');
-
             logo?.addEventListener('click', () => {
-                dispatch(navigate(Screens.DASHBOARD))
-            })
+                dispatch(navigate(Screens.DASHBOARD));
+            });
 
+            // Add the AppPost form component
             const appPostComponent = new AppPost();
             appPostComponent.setAttribute(PostAttribute.title, 'New Post');
-            appPostComponent.setAttribute(PostAttribute.image, ''); ``
+            appPostComponent.setAttribute(PostAttribute.image, '');
             appPostComponent.setAttribute(PostAttribute.description, '');
             appPostComponent.setAttribute(PostAttribute.submitButton, 'Publish');
 
-            // Añadir el componente del formulario
             this.shadowRoot.querySelector('.form-container')?.appendChild(appPostComponent);
 
-            // Configurar el evento de publicación
+            // Set up the submit event listener
             appPostComponent.addEventListener('submitPost', (event: any) => {
                 const { title, image, description } = event.detail;
                 this.handleCreatePost({ title, image, description });

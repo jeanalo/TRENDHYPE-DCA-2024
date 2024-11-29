@@ -4,14 +4,13 @@ import { appState } from '../../store';
 import { getSavedPosts, getUserByUID } from '../../utils/firebase';
 
 class favoritePosts extends HTMLElement {
-    userid ? : string;
+    userid?: string;
 
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
     }
 
-    
     static get observedAttributes() {
         return ["userid"];
     }
@@ -23,7 +22,6 @@ class favoritePosts extends HTMLElement {
         }
     }
 
-
     connectedCallback() {
         console.log('FavoritePosts component connected');
         this.render();
@@ -31,63 +29,58 @@ class favoritePosts extends HTMLElement {
     }
 
     async getUserData() {
-
-        const userID = appState.user
+        const userID = appState.user;
 
         if (!userID) {
-            console.error('No se proporcionó el UID del amigo.');
+            console.error('No se proporcionó el UID del usuario.');
             return;
         }
 
         const user = await getUserByUID(userID);
 
         if (user) {
-            console.log(user);
-            
             const userSideCard = new UserSideCard();
             userSideCard.setAttribute(UserSideCardAttribute.name, `${user.firstname} ${user.lastname}`);
             userSideCard.setAttribute(UserSideCardAttribute.username, user.username);
-            userSideCard.setAttribute(UserSideCardAttribute.profileimage, user.profileImage );
+            userSideCard.setAttribute(UserSideCardAttribute.profileimage, user.profileImage);
             userSideCard.setAttribute(UserSideCardAttribute.description, user.description);
-            userSideCard.setAttribute(UserSideCardAttribute.userid, this.userid!)
-    
+            userSideCard.setAttribute(UserSideCardAttribute.userid, this.userid!);
+
             const sidebar = this.shadowRoot?.querySelector('.sidebar');
             sidebar?.appendChild(userSideCard);
         }
-        
     }
+
     async renderSavedPosts() {
         if (!this.userid) {
             console.log('No userid passed');
-            return
+            return;
         }
 
         const posts = await getSavedPosts(this.userid);
-        const postContainer = this.shadowRoot?.querySelector('#posts-container')
+        const postContainer = this.shadowRoot?.querySelector('#posts-container');
 
         if (postContainer) {
             postContainer.innerHTML = "";
         }
 
         if (posts.length === 0) {
-            const addPostMsg = this.ownerDocument.createElement('p')
-            addPostMsg.innerHTML = 'Add to favorite any post'
+            const addPostMsg = this.ownerDocument.createElement('p');
+            addPostMsg.innerHTML = 'Add to favorite any post';
             postContainer?.appendChild(addPostMsg);
         }
 
         posts.forEach((post: { id: string; image?: string; description?: string; likes?: number }) => {
             const postCard = this.ownerDocument.createElement('my-card') as MyCard;
-        
-            // Verifica y asigna atributos solo si están presentes
+
             if (post.image) postCard.setAttribute(Attribute.image, post.image);
             if (post.description) postCard.setAttribute(Attribute.description, post.description);
             if (post.likes !== undefined) postCard.setAttribute(Attribute.likes, post.likes.toString());
             postCard.setAttribute(Attribute.postid, post.id);
             postCard.setAttribute(Attribute.userid, this.userid!);
-        
+
             postContainer?.appendChild(postCard);
         });
-
     }
 
     render() {
@@ -112,7 +105,10 @@ class favoritePosts extends HTMLElement {
                     }
 
                     .sidebar {
-                    
+                        width: 250px;
+                        padding: 20px;
+                        background-color: #3d3a0b;
+                        flex-shrink: 0;
                     }
 
                     .main-content {
@@ -120,16 +116,12 @@ class favoritePosts extends HTMLElement {
                         display: flex;
                         flex-direction: column;
                         overflow-y: auto;
-                        width: 100vw;
-                        height: 100vh;
+                        padding: 20px;
                     }
 
                     .banner {
                         width: 100%;
                         height: 200px;
-                        background-image: url('https://i.pinimg.com/564x/c6/b3/65/c6b365e86c8fe53165c72b554ec16b48.jpg'); 
-                        background-size: cover;
-                        background-position: center;
                         display: flex;
                         align-items: center;
                         justify-content: center;
@@ -142,9 +134,44 @@ class favoritePosts extends HTMLElement {
                     #posts-container {
                         display: flex;
                         flex-wrap: wrap;
-                        justify-content: flex-start;
                         gap: 16px;
-                        padding-left: 300px;
+                        margin-top: 20px;
+                    }
+
+                    @media (max-width: 768px) {
+                        #my-favorites-container {
+                            flex-direction: column;
+                        }
+
+                        .sidebar {
+                            width: 100%;
+                            margin-bottom: 20px;
+                        }
+
+                        .main-content {
+                            padding: 10px;
+                        }
+
+                        .banner {
+                            height: 150px;
+                            font-size: 2rem;
+                        }
+
+                        #posts-container {
+                            gap: 10px;
+                        }
+                    }
+
+                    @media (max-width: 480px) {
+                        .banner {
+                            height: 120px;
+                            font-size: 1.8rem;
+                        }
+
+                        #posts-container {
+                            flex-direction: column;
+                            gap: 8px;
+                        }
                     }
                 </style>
                 
@@ -153,13 +180,11 @@ class favoritePosts extends HTMLElement {
                     <div class="main-content">
                         <div class="banner">Favorites</div>
                         <section id="posts-container">
-                        
-                        
+                            <!-- Aquí se renderizan los posts -->
                         </section>
                     </div>
                 </div>
             `;
-
         } else {
             console.error('Shadow root not found');
         }

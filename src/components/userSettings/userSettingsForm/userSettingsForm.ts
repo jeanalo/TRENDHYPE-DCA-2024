@@ -185,6 +185,8 @@ class userSettingsForm extends HTMLElement {
                 margin-top: 30px;
             }
 
+            
+
             button {
                 width: 150px;
                 padding: 10px;

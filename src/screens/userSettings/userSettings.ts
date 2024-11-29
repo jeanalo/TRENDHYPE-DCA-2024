@@ -1,5 +1,5 @@
 import UserSideCard, { UserSideCardAttribute } from '../../components/userSettings/userSideCard/userSideCard';
-import userSettingsForm, { userSettingsFormAttribute } from '../../components/userSettings/userSettingsForm/userSettingsForm';
+import userSettingsForm from '../../components/userSettings/userSettingsForm/userSettingsForm';
 import { getUserByUID } from '../../utils/firebase';
 
 class UserSettingsScreen extends HTMLElement {
@@ -9,7 +9,6 @@ class UserSettingsScreen extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
     }
-
 
     static get observedAttributes() {
         return ["userid"];
@@ -23,47 +22,42 @@ class UserSettingsScreen extends HTMLElement {
 
     connectedCallback() {
         this.render();
-        this.fetchUserData()
+        this.fetchUserData();
     }
 
     async fetchUserData() {
-
-        const userID = this.userid; // Obtener el UID del amigo desde el estado global
+        const userID = this.userid;
 
         if (!userID) {
-            console.error('No se proporcionó el UID del amigo.');
+            console.error('No se proporcionó el UID del usuario.');
             return;
         }
 
-        const user = await getUserByUID(userID); // Obtener información del usuario desde Firebase
+        const user = await getUserByUID(userID);
 
         if (user) {
-            console.log(user);
+            // Crear y configurar `UserSideCard`
             const userSideCard = new UserSideCard();
             userSideCard.setAttribute(UserSideCardAttribute.name, `${user.firstname} ${user.lastname}`);
             userSideCard.setAttribute(UserSideCardAttribute.username, user.username);
-            userSideCard.setAttribute(UserSideCardAttribute.profileimage, user.profileImage );
+            userSideCard.setAttribute(UserSideCardAttribute.profileimage, user.profileImage);
             userSideCard.setAttribute(UserSideCardAttribute.description, user.description);
-            userSideCard.setAttribute(UserSideCardAttribute.userid, this.userid!)
+            userSideCard.setAttribute(UserSideCardAttribute.userid, this.userid!);
 
             const sidebar = this.shadowRoot?.querySelector('.sidebar');
             sidebar?.appendChild(userSideCard);
 
-            // Crear y configurar el componente `UserSettingsForm`
-            const userSettingsFormComponent = this.ownerDocument.createElement('user-settings-form') as userSettingsForm;
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.firstname, user.firstname);
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.lastname, user.lastname);
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.email, user.email);
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.username, user.username);
-            userSettingsFormComponent.setAttribute(userSettingsFormAttribute.description, user.description);
+            // Configurar y agregar `userSettingsForm`
+            const userSettingsFormComponent = new userSettingsForm();
+            userSettingsFormComponent.setAttribute("firstname", user.firstname);
+            userSettingsFormComponent.setAttribute("lastname", user.lastname);
+            userSettingsFormComponent.setAttribute("email", user.email);
+            userSettingsFormComponent.setAttribute("username", user.username);
+            userSettingsFormComponent.setAttribute("description", user.description);
 
-            const mainContent = this.shadowRoot?.querySelector('.main-content');
-            mainContent?.appendChild(userSettingsFormComponent);
-            // Agregar `UserSettingsForm` al contenedor `#formContainer`
-            // this.shadowRoot?.querySelector('.formContainer')?.appendChild(userSettingsFormComponent);
+            const formContainer = this.shadowRoot?.querySelector('.form-container');
+            formContainer?.appendChild(userSettingsFormComponent);
         }
-
-
     }
 
     render() {
@@ -86,66 +80,67 @@ class UserSettingsScreen extends HTMLElement {
                         color: #FCF3E4;
                     }
 
-                   .sidebar {
+                    .sidebar {
                         width: 250px;
                         padding: 20px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
-                      
+                        background-color: #3d3a0b;
+                        flex-shrink: 0;
                     }
 
-
                     .main-content {
-                        flex: 3;
+                        flex: 1;
                         display: flex;
                         flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
                         padding: 20px;
                         overflow-y: auto;
                     }
 
-                    .settings-title {
-                        font-size: 2rem;
-                        font-weight: bold;
-                        margin-bottom: 20px;
-                        text-align: left;
+                    .form-container {
+                        width: 100%;
+                        max-width: 600px;
                     }
 
-                    /* Responsive adjustments */
+                    /* Responsividad */
                     @media (max-width: 768px) {
                         #user-settings-container {
                             flex-direction: column;
                         }
 
-                         .sidebar {
+                        .sidebar {
                             width: 100%;
-                            padding: 10px;
-                            align-items: center;
+                            margin-bottom: 20px;
                         }
 
                         .main-content {
                             padding: 10px;
                         }
 
-                        .settings-title {
-                            font-size: 1.5rem;
-                            text-align: center;
+                        .form-container {
+                            max-width: 100%;
+                        }
+                    }
+
+                    @media (max-width: 480px) {
+                        .form-container {
+                            padding: 10px;
                         }
                     }
                 </style>
                 
                 <div id="user-settings-container">
-        
-                    <div class="sidebar">
-                    </div>
-
-                 
+                    <div class="sidebar"></div>
                     <div class="main-content">
-                        
+                        <div class="form-container">
+                            <!-- Se inyectará el componente userSettingsForm aquí -->
+                        </div>
                     </div>
                 </div>
             `;
-
         }
     }
 }
