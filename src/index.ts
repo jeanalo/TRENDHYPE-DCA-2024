@@ -12,7 +12,6 @@ import './screens/createPost/createPost';
 import './screens/userSettings/userSettings'
 import './screens/myFavorites/myFavorites';
 
-// import './screens/DASHBOARD/DASHBOARD';
 
 class AppContainer extends HTMLElement {
     constructor() {
