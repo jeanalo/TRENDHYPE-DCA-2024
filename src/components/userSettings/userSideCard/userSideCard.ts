@@ -65,7 +65,6 @@ class UserSideCard extends HTMLElement {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                   
 
                     color: #FCF3E4;
                     padding-top: 20px;
