@@ -93,10 +93,12 @@ class imgSideBanner extends HTMLElement {
             }
                 /* Media query para pantallas más pequeñas (768px o menos) */
           @media (max-width: 768px) {
-              #trendHypePhoto {
-                  width: 16rem; /* Reduce el ancho */
-                  height: 24rem; /* Ajusta proporcionalmente la altura */
-              }
+              
+                  #trendHypePhoto {
+              width: 16rem;
+              height: 24rem;
+              margin-bottom: 40px; /* Margen adicional para evitar que toque el formulario */
+          }
 
               p {
                   font-size: 2rem; /* Reduce el tamaño de la fuente */

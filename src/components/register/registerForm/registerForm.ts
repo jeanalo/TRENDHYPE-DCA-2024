@@ -110,22 +110,24 @@ class Register extends HTMLElement {
                     cursor: pointer;
                 }
 
-                 @media (max-width: 768px) {
+                @media (max-width: 768px) {
                 form {
-                    width: 16rem; /* Ancho reducido, proporcional al componente anterior */
+                    width: 16rem; /* Ancho reducido */
                     height: 24rem; /* Altura reducida */
+                    margin-top: 40px; /* Espacio superior adicional */
+                }
+
+                input {
+                    width: calc(100% - 50px); /* Reduce el ancho de los inputs */
+                    padding: 10px 15px; /* Reduce el padding */
+                }
+
+                button {
+                    padding: 10px; /* Reduce el padding del botón */
                 }
 
                 form > p {
                     font-size: 1.4rem; /* Reduce el tamaño del título */
-                }
-
-                input {
-                    padding: 10px 16px; /* Ajusta el padding */
-                }
-
-                button {
-                    padding: 10px; /* Ajusta el padding del botón */
                 }
             }
             </style>
