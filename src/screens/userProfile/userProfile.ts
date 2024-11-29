@@ -128,7 +128,7 @@ class UserFeedScreen extends HTMLElement {
     render() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
-                <style>
+             <style>
                     * {
                         margin: 0;
                         padding: 0;
@@ -143,6 +143,7 @@ class UserFeedScreen extends HTMLElement {
                         height: 100vh;
                         background-color: #232106;
                         color: #FCF3E4;
+                        overflow: hidden;
                     }
 
                     .sidebar {
@@ -152,7 +153,8 @@ class UserFeedScreen extends HTMLElement {
                         flex-direction: column;
                         align-items: center;
                         margin-right: 20px;
-                      
+                        background-color: #2B2911;
+                        flex-shrink: 0;
                     }
 
                     .main-content {
@@ -161,6 +163,7 @@ class UserFeedScreen extends HTMLElement {
                         flex-direction: column;
                         padding: 20px;
                         overflow-y: auto;
+                        height: calc(100vh - 40px);
                     }
 
                     .add-button {
@@ -176,39 +179,14 @@ class UserFeedScreen extends HTMLElement {
                         align-self: flex-start;
                     }
 
-                    .add-button:hover {
-                        background-color: #C5B247;
-                    }
-
                     .friends-container {
                         margin-bottom: 40px;
-                    }
-
-                    .friends-title {
-                        font-size: 1rem;
-                        font-weight: bold;
-                        margin-bottom: 10px;
-                    }
-
-                    #friends-list {
-                        display: flex;
-                        gap: 10px;
-                        overflow-x: auto;
-                        padding-bottom: 10px;
-                    }
-
-                    .feed-title {
-                        font-size: 1rem;
-                        font-weight: bold;
-                        margin: 20px 0;
                     }
 
                     #posts-container {
                         display: flex;
                         flex-wrap: wrap;
-                        justify-content: flex-start;
                         gap: 16px;
-                        padding-left: 10px;
                     }
 
                     @media (max-width: 768px) {
@@ -218,26 +196,19 @@ class UserFeedScreen extends HTMLElement {
 
                         .sidebar {
                             width: 100%;
-                            padding: 10px;
-                            align-items: center;
+                            margin-bottom: 20px;
                         }
 
                         .main-content {
-                            padding: 10px;
-                        }
-
-                        .feed-title, .friends-title {
-                            font-size: 1.5rem;
-                            text-align: center;
+                            height: auto;
                         }
 
                         #posts-container {
+                            flex-direction: column;
                             gap: 10px;
-                            justify-content: center;
                         }
                     }
                 </style>
-                
                 <div id="user-feed-container">
                     <div class="sidebar"></div>
                     <div class="main-content">

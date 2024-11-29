@@ -206,7 +206,7 @@ class MyCard extends HTMLElement {
                     return;
                 }
 
-                const result = await toggleSavePost(this.userid, this.postid);
+                const result = await toggleSavePost(appState.user, this.postid);
 
                 if (result.success) {
                     const savePath = saveIcon.querySelector('path');

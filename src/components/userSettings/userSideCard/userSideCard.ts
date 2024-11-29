@@ -48,7 +48,7 @@ class UserSideCard extends HTMLElement {
         console.log(this.profileimage);
         
         this.shadowRoot.innerHTML = `
-            <style>
+           <style>
                 * {
                     margin: 0;
                     padding: 0;
@@ -70,6 +70,7 @@ class UserSideCard extends HTMLElement {
                     padding-top: 20px;
                     text-align: center;
                     transition: width 0.3s ease;
+                    z-index: 1000;
                 }
 
                 .dashboard-logo {
@@ -128,10 +129,6 @@ class UserSideCard extends HTMLElement {
                     gap: 8px;
                 }
 
-                .menu-item.hidden {
-                    display: none; /* Oculta elementos con esta clase */
-                }
-
                 .logout-container {
                     margin-top: 15px;
                     width: 100%;
@@ -139,10 +136,78 @@ class UserSideCard extends HTMLElement {
                     padding-left: 20px;
                 }
 
-                .hidden {
-                    display: none;
+                /* Responsividad para pantallas pequeñas */
+                @media (max-width: 768px) {
+                    .side-card {
+                        width: 100%; /* Ocupa todo el ancho */
+                        height: auto; /* Ajusta la altura */
+                        position: relative; /* No fija la posición */
+                        padding: 10px 20px;
+                    }
+
+                    .dashboard-logo {
+                        top: 10px;
+                        left: 10px;
+                        width: 60px;
+                    }
+
+                    .profile-image {
+                        width: 80px;
+                        height: 80px;
+                        margin-top: 40px;
+                    }
+
+                    .name {
+                        font-size: 1.2rem;
+                    }
+
+                    .username {
+                        font-size: 0.9rem;
+                    }
+
+                    .description {
+                        font-size: 0.8rem;
+                    }
+
+                    .menu-container {
+                        padding-left: 0;
+                        align-items: center;
+                    }
+
+                    .menu-item {
+                        font-size: 0.9rem;
+                    }
+
+                    .logout-container {
+                        justify-content: center;
+                        padding-left: 0;
+                    }
                 }
 
+                /* Ajustes para pantallas muy pequeñas (<480px) */
+                @media (max-width: 480px) {
+                    .side-card {
+                        padding: 5px;
+                    }
+
+                    .profile-image {
+                        width: 70px;
+                        height: 70px;
+                        margin-top: 20px;
+                    }
+
+                    .name {
+                        font-size: 1rem;
+                    }
+
+                    .username {
+                        font-size: 0.8rem;
+                    }
+
+                    .menu-item {
+                        font-size: 0.8rem;
+                    }
+                }
             </style>
             
             <div class="side-card">
