@@ -91,6 +91,18 @@ class imgSideBanner extends HTMLElement {
                 color: #E2D34B;
                 white-space: nowrap; /* Asegura que el texto no se envuelva */
             }
+                /* Media query para pantallas más pequeñas (768px o menos) */
+          @media (max-width: 768px) {
+              #trendHypePhoto {
+                  width: 16rem; /* Reduce el ancho */
+                  height: 24rem; /* Ajusta proporcionalmente la altura */
+              }
+
+              p {
+                  font-size: 2rem; /* Reduce el tamaño de la fuente */
+                  left: -3rem; /* Ajusta la posición horizontal */
+              }
+          }
 
           </style>
           

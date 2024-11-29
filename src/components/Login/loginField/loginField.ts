@@ -85,7 +85,7 @@ class loginForm extends HTMLElement {
                     text-align: left;
                     width: 100%;
                     max-width: 360px; /* Igual que #trendHypePhoto para tener la misma anchura */
-                    margin: 100px auto 20px; /* Ajuste de margen superior para alinear con imgfield.ts */
+                    margin: 30px auto 20px; /* Ajuste de margen superior para alinear con imgfield.ts */
                     aspect-ratio: 3 / 6; /* Ajuste de aspecto para mantener la misma altura que imgfield.ts */
                     box-sizing: border-box;
                 }
@@ -126,10 +126,13 @@ class loginForm extends HTMLElement {
                     border-radius: 32px;
                     cursor: pointer;
                 }
+                    form p {
+                    color: white;
+                    }
             </style>	
                
             <form>
-                <p>${this.logintittle || 'Log in'}</p>
+                <p>${this.logintittle || 'Log in'}</p><br><br>
                 <label for="email">e-mail address</label>
                 <input id="email" type="email" placeholder="e-mail address" value="${this.emailinput || ''}">
                 <label for="password">Password</label>

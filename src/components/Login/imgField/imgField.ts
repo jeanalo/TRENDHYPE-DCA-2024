@@ -36,6 +36,11 @@ class imgBanner extends HTMLElement {
                 <style>
       
             /* Contenedor principal para el Trend Hype Photo */
+
+            #trendHypeContainer{
+                                margin: 100px auto 80px; /* Ajuste de margen superior para alinear con imgfield.ts */
+
+            }
 #trendHypePhoto {
     position: relative;
     border-radius: 16px;
@@ -47,6 +52,7 @@ class imgBanner extends HTMLElement {
     background: white url('https://github.com/jeanalo/IMG-assets/blob/main/image%2047.png?raw=true') no-repeat center center;
     background-size: cover;
     margin: -170px auto 0; /* Centrar horizontalmente */
+    
 }
 
 /* Imagen de fondo */
